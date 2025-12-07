@@ -1,40 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Memory - XI-D</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Courier New', monospace; background: #000 !important; color: #ffd700; overflow-x: hidden; min-height: 100vh; position: relative; }
-        .photos-page { background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Memory - XI-D</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+body {
+    background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+}
+
+.photos-container{
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+.photo-gallery{
+    background:#111;
+    border:1px solid #ffd70050;
+    padding:20px;
+    border-radius:10px;
+    margin-top:2rem;
+}
+.photo-item img{
+    width:100%;
+    border-radius:10px;
+}
+</style>
 </head>
-<body class="photos-page">
-    <div class="photos-container">
-        <div class="page-header">
-            <h1 class="page-title">Photo Memory</h1>
-            <a href="index.html" class="back-link">← Back to Home</a>
+
+<body>
+<div class="photos-container">
+
+    <div class="page-header">
+        <h1 class="page-title">Photo Memory</h1>
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <div class="photo-gallery">
+        <div class="photo-item">
+            <div class="photo-placeholder">
+                <p>📸 Add photo here</p>
+            </div>
         </div>
-        
-        <div class="photo-gallery">
-            <div class="character-selector">
-                <div class="photo-slider" id="photoSlider">
-                    <!-- 
-                    ============================================
-                    TO ADD PHOTOS - Just add new photo-item divs below:
-                    ============================================
-                    
-                    <div class="photo-item">
-                        <img src="YOUR_PHOTO_URL_HERE" alt="Photo description">
-                    </div>
-                    
-                    Example:
-                    <div class="photo-item">
-                        <img src="https://example.com/photo1.jpg" alt="Class Photo 1">
-                    </div>
-                    <div class="photo-item">
+    </div>
+
+</div>
+
+<script src="photos.js"></script>
+</body>
+</html>                    <div class="photo-item">
                         <img src="https://example.com/photo2.jpg" alt="Class Photo 2">
                     </div>
                     
