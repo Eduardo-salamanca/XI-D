@@ -1,0 +1,628 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: #000;
+    color: #ffd700;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Canvas layers */
+#starsCanvas, #cometsCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#cometsCanvas {
+    z-index: 2;
+}
+
+/* Main page styles */
+.main-page {
+    background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+}
+
+.container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Main frame container */
+.main-frame {
+    border: 3px solid #ffd700;
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 3rem 4rem;
+    box-shadow: 
+        0 0 40px rgba(255, 215, 0, 0.2),
+        inset 0 0 40px rgba(255, 215, 0, 0.03);
+    max-width: 800px;
+    width: 100%;
+    transition: backdrop-filter 0.3s ease;
+}
+
+.main-frame.star-blur {
+    backdrop-filter: blur(20px);
+}
+
+/* Frame header */
+.frame-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.frame-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #ffd700;
+    text-shadow: 
+        0 0 10px #ffd700,
+        0 0 20px rgba(255, 215, 0, 0.5);
+    margin: 0;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 10px #ffd700,
+            inset 0 0 10px rgba(255, 215, 0, 0.05);
+    }
+    50% {
+        box-shadow: 
+            0 0 20px #ffd700,
+            inset 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+}
+
+/* Navigation */
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    text-decoration: none;
+    color: #ffd700;
+    border: 2px solid #ffd700;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.nav-link.star-blur {
+    backdrop-filter: blur(20px);
+}
+
+.nav-icon {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.link-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    flex: 1;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.15), transparent);
+    transition: left 0.5s;
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    box-shadow: 
+        0 0 25px rgba(255, 215, 0, 0.4),
+        inset 0 0 15px rgba(255, 215, 0, 0.05);
+    transform: translateX(10px);
+    border-color: #ffed4e;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.nav-link:hover .nav-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9));
+}
+
+.nav-link:hover .link-text {
+    text-shadow: 0 0 12px #ffd700;
+}
+
+/* Birthday page styles */
+.birthday-page, .schedule-page {
+    background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+}
+
+.birthday-container, .schedule-container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    border: 3px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.page-title {
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    text-shadow: 
+        0 0 10px #ffd700,
+        0 0 20px #ffd700;
+    margin-bottom: 1rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    color: #ffd700;
+    text-decoration: none;
+    border: 2px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    box-shadow: 0 0 20px #ffd700;
+    transform: translateY(-3px);
+}
+
+.birthday-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.birthday-card {
+    padding: 1.5rem;
+    border: 2px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.birthday-card:hover {
+    box-shadow: 0 0 20px #ffd700;
+    transform: translateY(-5px);
+}
+
+.birthday-card.upcoming {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 20px #ff6b6b;
+    animation: urgent-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes urgent-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px #ff6b6b;
+    }
+    50% {
+        box-shadow: 0 0 40px #ff6b6b, 0 0 60px #ff6b6b;
+    }
+}
+
+.birthday-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+.birthday-date {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.days-until {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* Photo memory page */
+.photos-page {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.photos-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 70%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+    z-index: 1;
+    pointer-events: none;
+    animation: flower-rotate 20s linear infinite;
+}
+
+@keyframes flower-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.photos-container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.photo-gallery {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 2rem;
+    position: relative;
+}
+
+.character-selector {
+    position: relative;
+    width: 100%;
+}
+
+.photo-slider {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    margin: 2rem 0;
+}
+
+.photo-item {
+    position: absolute;
+    width: 400px;
+    height: 450px;
+    opacity: 0.4;
+    transform: scale(0.6) translateX(0);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.photo-item.active {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    z-index: 3;
+    filter: blur(0);
+    pointer-events: auto;
+}
+
+.photo-item.prev {
+    transform: scale(0.7) translateX(-350px);
+    opacity: 0.5;
+    z-index: 2;
+    filter: blur(1px);
+}
+
+.photo-item.next {
+    transform: scale(0.7) translateX(350px);
+    opacity: 0.5;
+    z-index: 2;
+    filter: blur(1px);
+}
+
+.photo-item:not(.active):not(.prev):not(.next) {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid #ffd700;
+    border-radius: 15px;
+    box-shadow: 
+        0 0 40px rgba(255, 215, 0, 0.6),
+        0 0 80px rgba(255, 215, 0, 0.3),
+        inset 0 0 30px rgba(255, 215, 0, 0.1);
+    transition: all 0.5s ease;
+}
+
+.photo-item.active img {
+    box-shadow: 
+        0 0 60px rgba(255, 215, 0, 0.8),
+        0 0 120px rgba(255, 215, 0, 0.4),
+        inset 0 0 40px rgba(255, 215, 0, 0.15);
+    border-width: 4px;
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px dashed #ffd700;
+    border-radius: 15px;
+    color: #ffd700;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.photo-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.photo-info {
+    min-width: 100px;
+    text-align: center;
+    color: #ffd700;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    letter-spacing: 0.1em;
+}
+
+.photo-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 3px solid #ffd700;
+    color: #ffd700;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.photo-btn:hover:not(:disabled) {
+    box-shadow: 
+        0 0 30px #ffd700,
+        0 0 50px rgba(255, 215, 0, 0.5);
+    transform: scale(1.1);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.photo-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.photo-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.photo-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #ffd700;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.indicator:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.indicator.active {
+    background: #ffd700;
+    box-shadow: 
+        0 0 15px #ffd700,
+        0 0 25px rgba(255, 215, 0, 0.6);
+    transform: scale(1.3);
+}
+
+/* Schedule page */
+.schedule-container {
+    position: relative;
+    z-index: 10;
+}
+
+.schedule-grid {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.day-schedule {
+    border: 2px solid #ffd700;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.day-schedule:hover {
+    box-shadow: 0 0 20px #ffd700;
+    transform: translateY(-5px);
+}
+
+.day-title {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #ffd700;
+    border-bottom: 2px solid #ffd700;
+    padding-bottom: 0.5rem;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+}
+
+.schedule-time {
+    font-weight: bold;
+    min-width: 120px;
+}
+
+.schedule-subject {
+    flex: 1;
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-frame {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+    
+    .frame-title {
+        font-size: 2rem;
+    }
+    
+    .nav-link {
+        padding: 1.2rem 1.5rem;
+    }
+    
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .link-text {
+        font-size: 1rem;
+    }
+    
+    .birthday-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .photo-slider {
+        height: 400px;
+    }
+    
+    .photo-item {
+        width: 300px;
+        height: 350px;
+    }
+    
+    .photo-item.prev {
+        transform: scale(0.6) translateX(-250px);
+    }
+    
+    .photo-item.next {
+        transform: scale(0.6) translateX(250px);
+    }
+    
+    .photo-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+}
