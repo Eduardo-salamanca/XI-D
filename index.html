@@ -47,6 +47,155 @@
         .main-frame {
             border: 3px solid #ffd700 !important;
             border-radius: 25px;
+            background: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(10px);
+            padding: 3rem 4rem;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
+            max-width: 800px;
+            width: 100%;
+        }
+        .frame-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+        .frame-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #ffd700 !important;
+            text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
+            margin: 0;
+        }
+        .navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+        .nav-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            text-decoration: none;
+            color: #ffd700 !important;
+            border: 2px solid #ffd700 !important;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .nav-link:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
+            transform: translateX(10px);
+            border-color: #ffed4e !important;
+            background: rgba(0, 0, 0, 0.15) !important;
+        }
+        .nav-icon {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+        }
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .link-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="main-page">
+    <canvas id="starsCanvas"></canvas>
+    <canvas id="cometsCanvas"></canvas>
+    
+    <div class="container">
+        <div class="main-frame">
+            <header class="frame-header">
+                <h1 class="frame-title">Class Portal</h1>
+            </header>
+            
+            <nav class="navigation">
+                <a href="birthday.html" class="nav-link">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="14" width="12" height="4" rx="1" fill="#ffd700" opacity="0.8"/>
+                            <rect x="7" y="10" width="10" height="4" rx="1" fill="#ffd700" opacity="0.9"/>
+                            <rect x="8" y="6" width="8" height="4" rx="1" fill="#ffd700"/>
+                            <rect x="10" y="3" width="1.5" height="3" fill="#ffd700"/>
+                            <rect x="12.5" y="3" width="1.5" height="3" fill="#ffd700"/>
+                            <path d="M10.5 2C10.5 1.5 11 1 11.5 1C12 1 12.5 1.5 12.5 2" stroke="#ffd700" stroke-width="1" fill="none"/>
+                            <path d="M13 2C13 1.5 13.5 1 14 1C14.5 1 15 1.5 15 2" stroke="#ffd700" stroke-width="1" fill="none"/>
+                            <circle cx="9" cy="12" r="0.8" fill="#ffd700" opacity="0.6"/>
+                            <circle cx="15" cy="12" r="0.8" fill="#ffd700" opacity="0.6"/>
+                        </svg>
+                    </div>
+                    <span class="link-text">Birthday List</span>
+                </a>
+                <a href="photos.html" class="nav-link">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H7" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M17 3H19C20.1046 3 21 3.89543 21 5V7" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 17V19C21 20.1046 20.1046 21 19 21H17" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M7 21H5C3.89543 21 3 20.1046 3 19V17" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="6" y="6" width="12" height="12" rx="1" stroke="#ffd700" stroke-width="2"/>
+                            <path d="M9 9L12 6L15 9L18 6" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="14" r="1.5" fill="#ffd700"/>
+                        </svg>
+                    </div>
+                    <span class="link-text">Photo Memory</span>
+                </a>
+                <a href="schedule.html" class="nav-link">
+                    <div class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="4" y="5" width="16" height="16" rx="2" stroke="#ffd700" stroke-width="2"/>
+                            <path d="M4 9H20" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M9 5V3" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M15 5V3" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="8" cy="13" r="1" fill="#ffd700"/>
+                            <circle cx="12" cy="13" r="1" fill="#ffd700"/>
+                            <circle cx="16" cy="13" r="1" fill="#ffd700"/>
+                            <circle cx="8" cy="17" r="1" fill="#ffd700"/>
+                            <circle cx="12" cy="17" r="1" fill="#ffd700"/>
+                        </svg>
+                    </div>
+                    <span class="link-text">Schedule</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .main-frame {
+            border: 3px solid #ffd700 !important;
+            border-radius: 25px;
             /* FIX: Slightly increased transparency from 0.1 to 0.08 */
             background: rgba(0, 0, 0, 0.08) !important;
             backdrop-filter: blur(10px);
