@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule - XI-D</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Courier New', monospace; background: #000 !important; color: #ffd700; overflow-x: hidden; min-height: 100vh; position: relative; }
-        .birthday-page, .schedule-page { background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule - XI-D</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+body {
+    background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+}
+.schedule-container{
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+.schedule-grid{
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+    gap: 1rem;
+}
+.schedule-grid div{
+    background:#111;
+    border:1px solid #ffd70050;
+    padding:10px;
+    border-radius:10px;
+}
+</style>
 </head>
-<body class="schedule-page">
-    <canvas id="starsCanvas"></canvas>
-    <canvas id="cometsCanvas"></canvas>
-    
-    <div class="schedule-container">
-        <div class="page-header">
-            <h1 class="page-title">Class Schedule</h1>
-            <a href="index.html" class="back-link">← Back to Home</a>
-        </div>
-        
-        <div class="schedule-grid" id="scheduleGrid"></div>
+
+<body>
+<div class="schedule-container">
+
+    <div class="page-header">
+        <h1 class="page-title">Class Schedule</h1>
+        <a href="index.html" class="back-link">← Back to Home</a>
     </div>
-    
-    <script src="birthday-stars.js"></script>
-    <script src="schedule.js"></script>
+
+    <div class="schedule-grid" id="scheduleGrid"></div>
+
+</div>
+
+<script src="schedule.js"></script>
 </body>
 </html>
