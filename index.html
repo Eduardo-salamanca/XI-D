@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XI-D Class Website</title>
+    <title>XI-D Class Portal</title>
     <style>
         * {
             margin: 0;
@@ -11,15 +11,15 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Courier New', monospace;
+            font-family: 'Rajdhani', 'Courier New', monospace;
             background: #000;
-            color: #ffd700;
+            color: #0ff;
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
         .main-page {
-            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
+            background: radial-gradient(ellipse at bottom, #0a0a1a 0%, #000 100%);
         }
         #starsCanvas, #cometsCanvas {
             position: fixed;
@@ -42,10 +42,10 @@
             z-index: 3;
             pointer-events: none;
             background-image: 
-                linear-gradient(rgba(255, 215, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 215, 0, 0.1) 1px, transparent 1px);
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
             background-size: 50px 50px;
-            opacity: 0.3;
+            opacity: 0.5;
         }
         .container {
             position: relative;
@@ -54,45 +54,120 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: clamp(0.8rem, 3vw, 2rem);
+            padding: 1rem;
         }
         .main-frame {
-            border: 3px solid #ffd700;
-            border-radius: 25px;
-            background: rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(3px);
-            padding: clamp(1.2rem, 4vw, 3rem) clamp(1rem, 5vw, 4rem);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
-            max-width: 800px;
+            position: relative;
+            border: 1px solid #0ff;
+            border-image: linear-gradient(45deg, #0ff, #f0f, #0ff) 1;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            padding: 2rem;
             width: 100%;
+            max-width: 900px;
+            box-shadow: 
+                0 0 25px rgba(0, 255, 255, 0.3),
+                0 0 50px rgba(0, 0, 0, 0.7),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            clip-path: polygon(
+                0 20px, 
+                20px 0, 
+                calc(100% - 20px) 0, 
+                100% 20px, 
+                100% calc(100% - 20px), 
+                calc(100% - 20px) 100%, 
+                20px 100%, 
+                0 calc(100% - 20px)
+            );
+            overflow: hidden;
+        }
+        .main-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
+            animation: scanline 3s linear infinite;
+        }
+        .main-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
+            animation: scanline 3s linear infinite reverse;
+        }
+        @keyframes scanline {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         .frame-header {
             text-align: center;
-            margin-bottom: clamp(1.5rem, 4vw, 3rem);
-            padding-bottom: clamp(1.2rem, 3vw, 2rem);
-            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            position: relative;
+        }
+        .frame-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
         }
         .frame-title {
-            font-size: clamp(1.3rem, 4vw, 2.5rem);
-            font-weight: bold;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: #ffd700;
-            text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
-            margin: 0;
+            letter-spacing: 0.3em;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 30px #0ff,
+                0 0 40px #0ff;
+            margin: 0 0 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        .frame-title::before,
+        .frame-title::after {
+            content: '//';
+            color: #0ff;
+            margin: 0 0.5em;
+            opacity: 0.7;
         }
         .logo-section {
-            margin-top: clamp(0.8rem, 2vw, 1.5rem);
-            padding: clamp(0.8rem, 2vw, 1.5rem);
-            border-radius: 14px;
-            background: rgba(0, 0, 0, 0.08);
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            position: relative;
+            clip-path: polygon(
+                0 10px,
+                10px 0,
+                calc(100% - 10px) 0,
+                100% 10px,
+                100% calc(100% - 10px),
+                calc(100% - 10px) 100%,
+                10px 100%,
+                0 calc(100% - 10px)
+            );
         }
         .logo-guide-title {
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            margin-bottom: 1rem;
-            color: #ffd700;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.2rem;
+            color: #0ff;
             text-transform: uppercase;
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            text-align: center;
         }
         .logo-container {
             position: relative;
@@ -105,120 +180,166 @@
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            padding: 2px;
-            overflow: hidden;
-        }
-        .logo-outline::before, .logo-outline::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            pointer-events: none;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            background: rgba(0, 255, 255, 0.05);
+            padding: 3px;
         }
         .logo-outline::before {
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
-        }
-        .logo-outline::after {
-            background: conic-gradient(
-                from 0deg,
-                transparent,
-                rgba(255, 215, 0, 0.9),
-                transparent 25%,
-                rgba(255, 215, 0, 0.8),
-                transparent 50%,
-                rgba(255, 215, 0, 0.9),
-                transparent 75%,
-                rgba(255, 215, 0, 0.95)
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, #0ff, #f0f, #0ff);
+            z-index: -1;
+            margin: -2px;
+            animation: rotate 10s linear infinite;
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
             );
-            animation: neonSpin 6s linear infinite;
-            opacity: 0.9;
-            border: 1px solid transparent;
-            background-size: 200% 200%;
-            mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
-            mask-composite: exclude;
-            -webkit-mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
-            -webkit-mask-composite: xor;
-            padding: 1px;
+        }
+        @keyframes rotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
         }
         .logo-placeholder {
             position: relative;
             z-index: 1;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            overflow: hidden;
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            clip-path: polygon(
+                30% 0%, 70% 0%, 
+                100% 30%, 100% 70%, 
+                70% 100%, 30% 100%, 
+                0% 70%, 0% 30%
+            );
+            overflow: hidden;
         }
         .logo-placeholder img {
-            width: 85%;
-            height: 85%;
+            width: 80%;
+            height: 80%;
             object-fit: contain;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+            transition: all 0.3s ease;
         }
         .logo-placeholder:hover img {
             transform: scale(1.05);
-        }
-        @keyframes neonSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8));
         }
         .navigation {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(1rem, 2vw, 1.5rem);
-            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin-top: 2.5rem;
         }
         .nav-link {
             position: relative;
             display: flex;
             align-items: center;
-            gap: clamp(1rem, 2vw, 1.5rem);
-            padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.2rem, 3vw, 2rem);
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
             text-decoration: none;
-            color: #ffd700;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(3px);
+            color: #0ff;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
             transition: all 0.3s ease;
             overflow: hidden;
+            clip-path: polygon(
+                0 0,
+                calc(100% - 15px) 0,
+                100% 15px,
+                100% 100%,
+                15px 100%,
+                0 calc(100% - 15px)
+            );
+        }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #0ff);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
         .nav-link:hover {
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
-            transform: translateX(10px);
-            border-color: #ffed4e;
-            background: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        .nav-link:hover::before {
+            transform: translateX(100%);
         }
         .nav-icon {
-            width: clamp(30px, 6vw, 50px);
-            height: clamp(30px, 6vw, 50px);
+            width: 40px;
+            height: 40px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 8px;
+            clip-path: polygon(
+                0 0,
+                calc(100% - 8px) 0,
+                100% 8px,
+                100% 100%,
+                8px 100%,
+                0 calc(100% - 8px)
+            );
         }
         .nav-icon svg {
             width: 100%;
             height: 100%;
         }
         .link-text {
-            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-            flex: 1;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            position: relative;
+        }
+        .link-text::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover .link-text::after {
+            right: -30px;
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+            .main-frame {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            .frame-title {
+                font-size: 1.5rem;
+                letter-spacing: 0.2em;
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="main-page">
     <canvas id="starsCanvas"></canvas>
@@ -228,13 +349,13 @@
     <div class="container">
         <div class="main-frame">
             <header class="frame-header">
-                <h1 class="frame-title">Class Portal</h1>
+                <h1 class="frame-title">CLASS PORTAL</h1>
                 <div class="logo-section">
-                    <div class="logo-guide-title">Class Logo</div>
+                    <div class="logo-guide-title">CLASS LOGO</div>
                     <div class="logo-container">
                         <div class="logo-outline">
                             <div class="logo-placeholder">
-                                <img src="logoo.png" alt="Class Logo" onerror="this.outerHTML='<div style=\'color:rgba(255,215,0,0.7);font-size:0.9rem;padding:1rem;text-align:center;\'>Place logoo.png in this folder</div>'">
+                                <img src="logoo.png" alt="Class Logo" onerror="this.outerHTML='<div style=\'color:rgba(0,255,255,0.7);font-size:0.9rem;padding:1rem;text-align:center;\'>Place logoo.png in this folder</div>'">
                             </div>
                         </div>
                     </div>
@@ -245,48 +366,48 @@
                 <a href="birthday.html" class="nav-link">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="6" y="14" width="12" height="4" rx="1" fill="#ffd700" opacity="0.8"/>
-                            <rect x="7" y="10" width="10" height="4" rx="1" fill="#ffd700" opacity="0.9"/>
-                            <rect x="8" y="6" width="8" height="4" rx="1" fill="#ffd700"/>
-                            <rect x="10" y="3" width="1.5" height="3" fill="#ffd700"/>
-                            <rect x="12.5" y="3" width="1.5" height="3" fill="#ffd700"/>
-                            <path d="M10.5 2C10.5 1.5 11 1 11.5 1C12 1 12.5 1.5 12.5 2" stroke="#ffd700" stroke-width="1" fill="none"/>
-                            <path d="M13 2C13 1.5 13.5 1 14 1C14.5 1 15 1.5 15 2" stroke="#ffd700" stroke-width="1" fill="none"/>
-                            <circle cx="9" cy="12" r="0.8" fill="#ffd700" opacity="0.6"/>
-                            <circle cx="15" cy="12" r="0.8" fill="#ffd700" opacity="0.6"/>
+                            <rect x="6" y="14" width="12" height="4" rx="1" fill="#0ff" opacity="0.9"/>
+                            <rect x="7" y="10" width="10" height="4" rx="1" fill="#0ff" opacity="0.9"/>
+                            <rect x="8" y="6" width="8" height="4" rx="1" fill="#0ff"/>
+                            <rect x="10" y="3" width="1.5" height="3" fill="#0ff"/>
+                            <rect x="12.5" y="3" width="1.5" height="3" fill="#0ff"/>
+                            <path d="M10.5 2C10.5 1.5 11 1 11.5 1C12 1 12.5 1.5 12.5 2" stroke="#0ff" stroke-width="1" fill="none"/>
+                            <path d="M13 2C13 1.5 13.5 1 14 1C14.5 1 15 1.5 15 2" stroke="#0ff" stroke-width="1" fill="none"/>
+                            <circle cx="9" cy="12" r="0.8" fill="#0ff" opacity="0.8"/>
+                            <circle cx="15" cy="12" r="0.8" fill="#0ff" opacity="0.8"/>
                         </svg>
                     </div>
-                    <span class="link-text">Birthday List</span>
+                    <span class="link-text">BIRTHDAY LIST</span>
                 </a>
                 <a href="photos.html" class="nav-link">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H7" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M17 3H19C20.1046 3 21 3.89543 21 5V7" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M21 17V19C21 20.1046 20.1046 21 19 21H17" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M7 21H5C3.89543 21 3 20.1046 3 19V17" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <rect x="6" y="6" width="12" height="12" rx="1" stroke="#ffd700" stroke-width="2"/>
-                            <path d="M9 9L12 6L15 9L18 6" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="8" cy="14" r="1.5" fill="#ffd700"/>
+                            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H7" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M17 3H19C20.1046 3 21 3.89543 21 5V7" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 17V19C21 20.1046 20.1046 21 19 21H17" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M7 21H5C3.89543 21 3 20.1046 3 19V17" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="6" y="6" width="12" height="12" rx="1" stroke="#0ff" stroke-width="2"/>
+                            <path d="M9 9L12 6L15 9L18 6" stroke="#0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="14" r="1.5" fill="#0ff"/>
                         </svg>
                     </div>
-                    <span class="link-text">Photo Memory</span>
+                    <span class="link-text">PHOTO MEMORY</span>
                 </a>
                 <a href="schedule.html" class="nav-link">
                     <div class="nav-icon">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="4" y="5" width="16" height="16" rx="2" stroke="#ffd700" stroke-width="2"/>
-                            <path d="M4 9H20" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M9 5V3" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M15 5V3" stroke="#ffd700" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="8" cy="13" r="1" fill="#ffd700"/>
-                            <circle cx="12" cy="13" r="1" fill="#ffd700"/>
-                            <circle cx="16" cy="13" r="1" fill="#ffd700"/>
-                            <circle cx="8" cy="17" r="1" fill="#ffd700"/>
-                            <circle cx="12" cy="17" r="1" fill="#ffd700"/>
+                            <rect x="4" y="5" width="16" height="16" rx="2" stroke="#0ff" stroke-width="2"/>
+                            <path d="M4 9H20" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M9 5V3" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M15 5V3" stroke="#0ff" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="8" cy="13" r="1" fill="#0ff"/>
+                            <circle cx="12" cy="13" r="1" fill="#0ff"/>
+                            <circle cx="16" cy="13" r="1" fill="#0ff"/>
+                            <circle cx="8" cy="17" r="1" fill="#0ff"/>
+                            <circle cx="12" cy="17" r="1" fill="#0ff"/>
                         </svg>
                     </div>
-                    <span class="link-text">Schedule</span>
+                    <span class="link-text">SCHEDULE</span>
                 </a>
             </nav>
         </div>
@@ -309,7 +430,7 @@
         
         // Initialize stars
         let stars = [];
-        const starCount = 200;
+        const starCount = 300;
         
         function initStars() {
             stars = [];
@@ -317,8 +438,9 @@
                 stars.push({
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
-                    size: Math.random() * 1.5,
-                    speed: Math.random() * 0.5
+                    size: Math.random() * 1.2,
+                    speed: Math.random() * 0.8 + 0.2,
+                    alpha: Math.random() * 0.5 + 0.5
                 });
             }
         }
@@ -326,17 +448,21 @@
         // Draw stars
         function drawStars() {
             starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
-            starsCtx.fillStyle = '#ffd700';
             
             stars.forEach(star => {
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                starsCtx.fillStyle = `rgba(0, 255, 255, ${star.alpha})`;
                 starsCtx.fill();
+                
+                // Twinkle effect
+                star.alpha += (Math.random() - 0.5) * 0.1;
+                star.alpha = Math.max(0.3, Math.min(1, star.alpha));
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < 0) {
-                    star.x = starsCanvas.width;
+                if (star.x < -10) {
+                    star.x = starsCanvas.width + 10;
                     star.y = Math.random() * starsCanvas.height;
                 }
             });
@@ -350,43 +476,45 @@
         function createComet() {
             const side = Math.floor(Math.random() * 4);
             let x, y, vx, vy;
+            const speed = Math.random() * 3 + 2;
             
             switch(side) {
                 case 0: // top
                     x = Math.random() * cometsCanvas.width;
-                    y = 0;
-                    vx = (Math.random() - 0.5) * 2;
-                    vy = Math.random() * 2 + 1;
+                    y = -20;
+                    vx = (Math.random() - 0.5) * speed;
+                    vy = speed;
                     break;
                 case 1: // right
-                    x = cometsCanvas.width;
+                    x = cometsCanvas.width + 20;
                     y = Math.random() * cometsCanvas.height;
-                    vx = -Math.random() * 2 - 1;
-                    vy = (Math.random() - 0.5) * 2;
+                    vx = -speed;
+                    vy = (Math.random() - 0.5) * speed;
                     break;
                 case 2: // bottom
                     x = Math.random() * cometsCanvas.width;
-                    y = cometsCanvas.height;
-                    vx = (Math.random() - 0.5) * 2;
-                    vy = -Math.random() * 2 - 1;
+                    y = cometsCanvas.height + 20;
+                    vx = (Math.random() - 0.5) * speed;
+                    vy = -speed;
                     break;
                 case 3: // left
-                    x = 0;
+                    x = -20;
                     y = Math.random() * cometsCanvas.height;
-                    vx = Math.random() * 2 + 1;
-                    vy = (Math.random() - 0.5) * 2;
+                    vx = speed;
+                    vy = (Math.random() - 0.5) * speed;
                     break;
             }
             
             comets.push({
                 x, y, vx, vy,
-                size: Math.random() * 2 + 1,
+                size: Math.random() * 1.5 + 0.5,
                 alpha: 1,
-                tail: []
+                tail: [],
+                color: `hsl(${Math.random() * 60 + 180}, 100%, 70%)`
             });
             
             // Random time for next comet
-            setTimeout(createComet, Math.random() * 5000 + 2000);
+            setTimeout(createComet, Math.random() * 4000 + 1000);
         }
         
         function drawComets() {
@@ -403,18 +531,27 @@
                 comet.tail.push({x: comet.x, y: comet.y});
                 
                 // Limit tail length
-                if (comet.tail.length > 20) {
+                if (comet.tail.length > 30) {
                     comet.tail.shift();
                 }
                 
-                // Draw tail
-                cometsCtx.strokeStyle = `rgba(255, 215, 0, ${comet.alpha})`;
-                cometsCtx.lineWidth = comet.size;
-                cometsCtx.lineCap = 'round';
-                cometsCtx.lineJoin = 'round';
-                cometsCtx.beginPath();
-                
+                // Draw tail with gradient
                 if (comet.tail.length > 1) {
+                    const gradient = cometsCtx.createLinearGradient(
+                        comet.tail[0].x, 
+                        comet.tail[0].y, 
+                        comet.x, 
+                        comet.y
+                    );
+                    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+                    gradient.addColorStop(0.7, comet.color);
+                    
+                    cometsCtx.strokeStyle = gradient;
+                    cometsCtx.lineWidth = comet.size;
+                    cometsCtx.lineCap = 'round';
+                    cometsCtx.lineJoin = 'round';
+                    cometsCtx.beginPath();
+                    
                     cometsCtx.moveTo(comet.tail[0].x, comet.tail[0].y);
                     for (let j = 1; j < comet.tail.length; j++) {
                         cometsCtx.lineTo(comet.tail[j].x, comet.tail[j].y);
@@ -423,13 +560,24 @@
                 }
                 
                 // Draw comet head
-                cometsCtx.fillStyle = `rgba(255, 215, 0, ${comet.alpha})`;
+                const headGradient = cometsCtx.createRadialGradient(
+                    comet.x, 
+                    comet.y, 
+                    0, 
+                    comet.x, 
+                    comet.y, 
+                    comet.size * 3
+                );
+                headGradient.addColorStop(0, comet.color);
+                headGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                
+                cometsCtx.fillStyle = headGradient;
                 cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 1.5, 0, Math.PI * 2);
+                cometsCtx.arc(comet.x, comet.y, comet.size * 3, 0, Math.PI * 2);
                 cometsCtx.fill();
                 
                 // Fade out
-                comet.alpha -= 0.01;
+                comet.alpha -= 0.005;
                 
                 // Remove if out of bounds or faded out
                 if (comet.x < -50 || comet.x > cometsCanvas.width + 50 || 
@@ -448,11 +596,31 @@
             initStars();
         });
         
+        // Start animations
         resizeCanvas();
         initStars();
         drawStars();
         createComet();
         drawComets();
+        
+        // Add cursor effect
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            // Update comets direction slightly based on mouse position
+            comets.forEach(comet => {
+                const dx = x - comet.x;
+                const dy = y - comet.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 200) {
+                    const force = (200 - distance) / 10000;
+                    comet.vx += dx * force;
+                    comet.vy += dy * force;
+                }
+            });
+        });
     </script>
 </body>
 </html>
