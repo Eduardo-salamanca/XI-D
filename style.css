@@ -28,6 +28,22 @@ body {
     z-index: 2;
 }
 
+/* Grid overlay for main page */
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(255, 215, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+}
+
 /* Main page styles */
 .main-page {
     background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
@@ -47,8 +63,8 @@ body {
 .main-frame {
     border: 3px solid #ffd700;
     border-radius: 25px;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(3px);
     padding: 3rem 4rem;
     box-shadow: 
         0 0 40px rgba(255, 215, 0, 0.2),
@@ -113,8 +129,8 @@ body {
     color: #ffd700;
     border: 2px solid #ffd700;
     border-radius: 15px;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(3px);
     transition: all 0.3s ease;
     overflow: hidden;
 }
@@ -200,8 +216,10 @@ body {
     margin-bottom: 3rem;
     padding: 2rem;
     border: 3px solid #ffd700;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
 }
 
 .page-title {
@@ -217,17 +235,24 @@ body {
 .back-link {
     display: inline-block;
     margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
+    padding: 0.8rem 2rem;
     color: #ffd700;
     text-decoration: none;
     border: 2px solid #ffd700;
-    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .back-link:hover {
-    box-shadow: 0 0 20px #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
     transform: translateY(-3px);
+    border-color: #ffed4e;
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .birthday-list {
@@ -240,28 +265,32 @@ body {
 .birthday-card {
     padding: 1.5rem;
     border: 2px solid #ffd700;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(3px);
     transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(255, 215, 0, 0.02);
 }
 
 .birthday-card:hover {
-    box-shadow: 0 0 20px #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 25px rgba(255, 215, 0, 0.05);
     transform: translateY(-5px);
+    border-color: #ffed4e;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .birthday-card.upcoming {
     border-color: #ff6b6b;
-    box-shadow: 0 0 20px #ff6b6b;
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.5), inset 0 0 25px rgba(255, 107, 107, 0.1);
     animation: urgent-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes urgent-pulse {
     0%, 100% {
-        box-shadow: 0 0 20px #ff6b6b;
+        box-shadow: 0 0 30px rgba(255, 107, 107, 0.5), inset 0 0 25px rgba(255, 107, 107, 0.1);
     }
     50% {
-        box-shadow: 0 0 40px #ff6b6b, 0 0 60px #ff6b6b;
+        box-shadow: 0 0 50px rgba(255, 107, 107, 0.8), 0 0 70px rgba(255, 107, 107, 0.4), inset 0 0 35px rgba(255, 107, 107, 0.15);
     }
 }
 
@@ -358,7 +387,9 @@ body {
     width: 400px;
     height: 450px;
     opacity: 0.4;
-    transform: scale(0.6) translateX(0);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6) translateX(0);
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
@@ -370,21 +401,21 @@ body {
 
 .photo-item.active {
     opacity: 1;
-    transform: scale(1) translateX(0);
+    transform: translate(-50%, -50%) scale(1) translateX(0);
     z-index: 3;
     filter: blur(0);
     pointer-events: auto;
 }
 
 .photo-item.prev {
-    transform: scale(0.7) translateX(-350px);
+    transform: translate(-50%, -50%) scale(0.7) translateX(-350px);
     opacity: 0.5;
     z-index: 2;
     filter: blur(1px);
 }
 
 .photo-item.next {
-    transform: scale(0.7) translateX(350px);
+    transform: translate(-50%, -50%) scale(0.7) translateX(350px);
     opacity: 0.5;
     z-index: 2;
     filter: blur(1px);
@@ -455,7 +486,7 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     border: 3px solid #ffd700;
     color: #ffd700;
     font-size: 1.5rem;
@@ -466,7 +497,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .photo-btn:hover:not(:disabled) {
@@ -533,15 +566,19 @@ body {
 
 .day-schedule {
     border: 2px solid #ffd700;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(3px);
     padding: 1.5rem;
     transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(255, 215, 0, 0.02);
 }
 
 .day-schedule:hover {
-    box-shadow: 0 0 20px #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 25px rgba(255, 215, 0, 0.05);
     transform: translateY(-5px);
+    border-color: #ffed4e;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .day-title {
@@ -603,26 +640,82 @@ body {
         grid-template-columns: 1fr;
     }
     
+    .grid-overlay {
+        background-size: 30px 30px;
+        opacity: 0.2;
+    }
+}
+
+/* Photo memory mobile portrait optimization */
+@media (max-width: 768px) and (orientation: portrait) {
+    .photos-container {
+        padding: 1rem;
+    }
+    
+    .page-header {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .back-link {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
     .photo-slider {
-        height: 400px;
+        height: 300px;
+        padding: 1rem 0;
+        margin: 1rem 0;
     }
     
     .photo-item {
-        width: 300px;
-        height: 350px;
+        width: 250px;
+        height: 280px;
     }
     
     .photo-item.prev {
-        transform: scale(0.6) translateX(-250px);
+        transform: translate(-50%, -50%) scale(0.5) translateX(-200px);
     }
     
     .photo-item.next {
-        transform: scale(0.6) translateX(250px);
+        transform: translate(-50%, -50%) scale(0.5) translateX(200px);
+    }
+    
+    .photo-item.active {
+        transform: translate(-50%, -50%) scale(1) translateX(0);
+    }
+    
+    .photo-controls {
+        gap: 1rem;
+        margin-top: 0.5rem;
     }
     
     .photo-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
+        width: 55px;
+        height: 55px;
+        font-size: 1.4rem;
+        border-width: 3px;
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .photo-info {
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .photo-indicators {
+        margin-top: 1rem;
+        gap: 0.6rem;
+    }
+    
+    .indicator {
+        width: 12px;
+        height: 12px;
     }
 }
