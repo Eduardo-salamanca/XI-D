@@ -106,34 +106,41 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            padding: 8px;
+            padding: 2px;
             overflow: hidden;
         }
         .logo-outline::before, .logo-outline::after {
             content: "";
             position: absolute;
-            inset: -1px;
+            inset: 0;
             border-radius: 50%;
             pointer-events: none;
         }
         .logo-outline::before {
-            border: 1px solid rgba(255, 215, 0, 0.45);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
         }
         .logo-outline::after {
             background: conic-gradient(
                 from 0deg,
                 transparent,
-                rgba(255, 215, 0, 0.85),
+                rgba(255, 215, 0, 0.9),
                 transparent 25%,
-                rgba(255, 215, 0, 0.75),
+                rgba(255, 215, 0, 0.8),
                 transparent 50%,
-                rgba(255, 215, 0, 0.85),
+                rgba(255, 215, 0, 0.9),
                 transparent 75%,
-                rgba(255, 215, 0, 0.9)
+                rgba(255, 215, 0, 0.95)
             );
             animation: neonSpin 6s linear infinite;
             opacity: 0.9;
+            border: 1px solid transparent;
+            background-size: 200% 200%;
+            mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#fff, #fff) content-box, linear-gradient(#fff, #fff);
+            -webkit-mask-composite: xor;
+            padding: 1px;
         }
         .logo-placeholder {
             position: relative;
@@ -146,14 +153,14 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
         .logo-placeholder img {
-            width: 80%;
-            height: 80%;
+            width: 85%;
+            height: 85%;
             object-fit: contain;
             border-radius: 50%;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
             transition: transform 0.3s ease;
         }
         .logo-placeholder:hover img {
