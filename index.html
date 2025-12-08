@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XI-D Class Website</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Critical styles - ensures design works even if CSS file doesn't load */
         * {
             margin: 0;
             padding: 0;
@@ -14,14 +12,14 @@
         }
         body {
             font-family: 'Courier New', monospace;
-            background: #000 !important;
-            color: #ffd700 !important;
+            background: #000;
+            color: #ffd700;
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
         .main-page {
-            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important;
+            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
         }
         #starsCanvas, #cometsCanvas {
             position: fixed;
@@ -59,9 +57,9 @@
             padding: clamp(0.8rem, 3vw, 2rem);
         }
         .main-frame {
-            border: 3px solid #ffd700 !important;
+            border: 3px solid #ffd700;
             border-radius: 25px;
-            background: rgba(0, 0, 0, 0.05) !important;
+            background: rgba(0, 0, 0, 0.05);
             backdrop-filter: blur(3px);
             padding: clamp(1.2rem, 4vw, 3rem) clamp(1rem, 5vw, 4rem);
             box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
@@ -79,7 +77,7 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: #ffd700 !important;
+            color: #ffd700;
             text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
             margin: 0;
         }
@@ -93,7 +91,7 @@
             font-weight: 700;
             letter-spacing: 0.1em;
             margin-bottom: 1rem;
-            color: #ffd700 !important;
+            color: #ffd700;
             text-transform: uppercase;
         }
         .logo-container {
@@ -108,19 +106,19 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            padding: 12px;
+            padding: 8px;
             overflow: hidden;
         }
         .logo-outline::before, .logo-outline::after {
             content: "";
             position: absolute;
-            inset: -2px;
+            inset: -1px;
             border-radius: 50%;
             pointer-events: none;
         }
         .logo-outline::before {
-            border: 2px solid rgba(255, 215, 0, 0.45);
-            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
+            border: 1px solid rgba(255, 215, 0, 0.45);
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
         }
         .logo-outline::after {
             background: conic-gradient(
@@ -148,7 +146,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.15);
         }
         .logo-placeholder img {
             width: 80%;
@@ -178,10 +176,10 @@
             gap: clamp(1rem, 2vw, 1.5rem);
             padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.2rem, 3vw, 2rem);
             text-decoration: none;
-            color: #ffd700 !important;
-            border: 2px solid #ffd700 !important;
+            color: #ffd700;
+            border: 2px solid #ffd700;
             border-radius: 15px;
-            background: rgba(0, 0, 0, 0.05) !important;
+            background: rgba(0, 0, 0, 0.05);
             backdrop-filter: blur(3px);
             transition: all 0.3s ease;
             overflow: hidden;
@@ -189,8 +187,8 @@
         .nav-link:hover {
             box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
             transform: translateX(10px);
-            border-color: #ffed4e !important;
-            background: rgba(0, 0, 0, 0.15) !important;
+            border-color: #ffed4e;
+            background: rgba(0, 0, 0, 0.15);
         }
         .nav-icon {
             width: clamp(30px, 6vw, 50px);
@@ -229,7 +227,7 @@
                     <div class="logo-container">
                         <div class="logo-outline">
                             <div class="logo-placeholder">
-                                <img src="logo.png" alt="Class Logo" onerror="this.outerHTML='<div style=\'color:rgba(255,215,0,0.7);font-size:0.9rem;padding:1rem;text-align:center;\'>Place logo.png in this folder</div>'">
+                                <img src="logoo.png" alt="Class Logo" onerror="this.outerHTML='<div style=\'color:rgba(255,215,0,0.7);font-size:0.9rem;padding:1rem;text-align:center;\'>Place logoo.png in this folder</div>'">
                             </div>
                         </div>
                     </div>
