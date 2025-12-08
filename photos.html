@@ -3,63 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photos Memory - XI-D</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Photo Memory - XI-D</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
         body {
-            font-family: 'Rajdhani', 'Courier New', monospace;
-            background: #0a0a12 !important;
-            color: #0ff !important;
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a12;
+            color: #0ff;
+            min-height: 100vh;
             overflow-x: hidden;
+        }
+        
+        .photos-page {
             min-height: 100vh;
             position: relative;
+            overflow-y: auto;
+            padding: 20px 0;
         }
-        .photos-page {
-            background:
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
-                linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%) !important;
+        
+        #starsCanvas, #cometsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .photos-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid #0ff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            clip-path: polygon(
+                0 20px, 20px 0, 
+                calc(100% - 20px) 0, 100% 20px, 
+                100% calc(100% - 20px), calc(100% - 20px) 100%, 
+                20px 100%, 0 calc(100% - 20px)
+            );
             position: relative;
             overflow: hidden;
         }
-        .photos-container {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            padding: clamp(1rem, 3vw, 2rem);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .page-header {
-            text-align: center;
-            margin-bottom: clamp(1.5rem, 4vw, 3rem);
-            padding: clamp(1.2rem, 3vw, 2rem);
-            background: rgba(0, 0, 0, 0.3) !important;
-            backdrop-filter: blur(10px);
-            position: relative;
-            max-width: 95%;
-            clip-path: polygon(
-                0 20px, 
-                20px 0, 
-                calc(100% - 20px) 0, 
-                100% 20px, 
-                100% calc(100% - 20px), 
-                calc(100% - 20px) 100%, 
-                20px 100%, 
-                0 calc(100% - 20px)
-            );
-            border: 2px solid #0ff;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-            width: 100%;
-            max-width: 1200px;
-        }
+        
         .page-header::before {
             content: '';
             position: absolute;
@@ -75,30 +78,29 @@
             animation: scan 8s linear infinite;
             opacity: 0.5;
         }
+        
         @keyframes scan {
             0% { background-position: 0 0; }
             100% { background-position: 200% 0; }
         }
+        
         .page-title {
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: 2.5rem;
             text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: #0ff !important;
-            text-shadow: 
-                0 0 10px #0ff,
-                0 0 20px rgba(0, 255, 255, 0.7),
-                0 0 40px rgba(0, 255, 255, 0.3);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            margin-bottom: 1rem;
         }
+        
         .back-link {
             display: inline-block;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             padding: 0.8rem 2rem;
-            color: #0ff !important;
+            color: #0ff;
             text-decoration: none;
-            border: 2px solid #0ff !important;
-            background: rgba(0, 0, 0, 0.3) !important;
+            border: 2px solid #0ff;
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
             font-weight: 600;
@@ -107,17 +109,31 @@
             position: relative;
             overflow: hidden;
             clip-path: polygon(
-                0 10px, 
-                10px 0, 
-                calc(100% - 10px) 0, 
-                100% 10px, 
-                100% calc(100% - 10px), 
-                calc(100% - 10px) 100%, 
-                10px 100%, 
-                0 calc(100% - 10px)
+                0 10px, 10px 0, 
+                calc(100% - 10px) 0, 100% 10px, 
+                100% calc(100% - 10px), calc(100% - 10px) 100%, 
+                10px 100%, 0 calc(100% - 10px)
             );
         }
-        .back-link::before {
+        
+        .back-link:hover {
+            background: rgba(0, 20, 30, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .photo-gallery {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #0ff;
+            border-radius: 5px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .photo-gallery::before {
             content: '';
             position: absolute;
             top: 0;
@@ -127,173 +143,83 @@
             background: linear-gradient(
                 90deg,
                 transparent,
-                rgba(0, 255, 255, 0.2),
+                rgba(0, 255, 255, 0.1),
                 transparent
             );
             transition: 0.5s;
         }
-        .back-link:hover {
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 
-                       inset 0 0 15px rgba(0, 255, 255, 0.1);
-            transform: translateY(-3px);
-            border-color: #0ff !important;
-            background: rgba(0, 0, 0, 0.4) !important;
-            color: #fff !important;
-        }
-        .back-link:hover::before {
+        
+        .photo-gallery:hover::before {
             left: 100%;
         }
-        .photo-gallery {
-            width: 90%;
-            max-width: 900px;
-            margin: 1.5rem auto;
-            position: relative;
-            perspective: 1000px;
-            overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            padding: 20px;
-        }
-        .photo-slider {
+        
+        .photo-container {
             position: relative;
             width: 100%;
-            height: 70vh;
-            max-height: 800px;
+            height: 60vh;
             min-height: 400px;
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            border-radius: 10px;
-            background: rgba(0, 10, 15, 0.5);
-            box-shadow: 
-                inset 0 0 20px rgba(0, 255, 255, 0.1),
-                0 0 30px rgba(0, 0, 0, 0.8);
-            margin: 0 auto;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            background: rgba(0, 10, 20, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid rgba(0, 255, 255, 0.2);
         }
-        .photo-item {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translate(-50%, -50%) translateX(100%);
-            top: 50%;
-            left: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            margin: 0 auto;
-        }
-        .photo-item.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateX(0);
-            z-index: 10;
-        }
-        .photo-item.prev {
-            transform: translate(-50%, -50%) translateX(-100%);
-            z-index: 5;
-        }
-        .photo-item.next {
-            transform: translate(-50%, -50%) translateX(100%);
-            z-index: 5;
-        }
-        .photo-item img {
+        
+        .photo-container img {
             max-width: 100%;
             max-height: 100%;
-            width: auto;
-            height: auto;
             object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px;
+            display: none;
+            transition: opacity 0.5s ease;
         }
-        .photo-item img:hover { 
-            transform: scale(1.02);
-            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.3);
+        
+        .photo-container img.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
-        .photo-controls {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .photo-nav {
             display: flex;
-            justify-content: space-between;
-            padding: 0 15px;
-            z-index: 20;
-            transform: translateY(-50%);
-            pointer-events: none;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
-        .photo-btn {
-            background: rgba(0, 20, 30, 0.7) !important;
-            color: #0ff !important;
-            border: 2px solid #0ff !important;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
+        
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #0ff;
+            color: #0ff;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            pointer-events: auto;
-            position: relative;
-            overflow: hidden;
+            font-size: 1.2rem;
+            border-radius: 5px;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
-        .photo-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(0, 255, 255, 0.2),
-                transparent
-            );
-            transition: 0.5s;
-        }
-        .photo-btn:hover {
-            background: rgba(0, 40, 60, 0.8) !important;
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
-            color: #fff !important;
-        }
-        .photo-btn:hover::before {
-            left: 100%;
-        }
+        
         .photo-indicators {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
             display: flex;
             justify-content: center;
-            gap: 12px;
-            z-index: 20;
-            padding: 10px;
-            background: rgba(0, 10, 20, 0.5);
-            backdrop-filter: blur(5px);
-            border-radius: 30px;
-            margin: 0 auto;
-            width: fit-content;
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
+        
         .indicator {
             width: 12px;
             height: 12px;
@@ -302,65 +228,38 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 255, 255, 0.5);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
         }
+        
         .indicator.active {
             background: #0ff;
-            transform: scale(1.3);
-            border-color: #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
         }
-        .indicator:hover {
-            background: rgba(0, 255, 255, 0.7);
+        
+        .photo-caption {
+            text-align: center;
+            margin-top: 1rem;
+            color: #8af;
+            font-size: 1.1rem;
+            min-height: 1.5rem;
         }
-        /* MOBILE: tighter padding + higher photo position */
+        
         @media (max-width: 768px) {
-            .photos-container { 
-                padding: 0.5rem; 
+            .photos-container {
+                padding: 1rem;
             }
+            
             .page-header {
-                padding: 1.2rem 0.8rem;
-                margin: 0.5rem auto 1.2rem;
-                width: 95%;
+                padding: 1.5rem 1rem;
             }
+            
             .page-title {
-                font-size: 1.6rem;
-                letter-spacing: 0.2em;
-                margin-bottom: 1rem;
+                font-size: 1.8rem;
             }
-            .back-link {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
-            }
-            .photo-gallery {
-                width: 98%;
-                margin: 0.5rem auto;
-                padding: 10px;
-            }
-            .photo-slider {
-                height: 60vh;
-                min-height: 350px;
-                max-height: 500px;
-            }
-            .photo-item {
-                padding: 10px;
-            }
-            .photo-controls {
-                padding: 0 5px;
-            }
-            .photo-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
-            }
-            .photo-indicators {
-                bottom: 10px;
-                padding: 8px;
-                gap: 8px;
-            }
-            .indicator {
-                width: 10px;
-                height: 10px;
+            
+            .photo-container {
+                height: 50vh;
+                min-height: 300px;
             }
         }
     </style>
@@ -374,160 +273,157 @@
             <h1 class="page-title">Photo Memory</h1>
             <a href="index.html" class="back-link">← Back to Home</a>
         </div>
-
+        
         <div class="photo-gallery">
-            <div class="character-selector">
-                <div class="photo-slider" id="photoSlider">
-                    <!-- Photo 1 -->
-                    <div class="photo-item active">
-                        <img src="./image1.png" alt="Class Photo 1"
-                             onerror="this.onerror=null; this.src='./image1.png'; this.alt='Image not found';">
-                    </div>
-                    <!-- Photo 2 -->
-                    <div class="photo-item">
-                        <img src="./image.png" alt="Class Photo 2"
-                             onerror="this.onerror=null; this.src='./image.png'; this.alt='Image not found';">
-                    </div>
-                </div>
-
-                <div class="photo-controls">
-                    <button class="photo-btn" id="prevBtn">❮</button>
-                    <button class="photo-btn" id="nextBtn">❯</button>
-                </div>
-
+            <div class="photo-container" id="photoContainer">
+                <!-- Images will be added by JavaScript -->
+            </div>
+            
+            <div class="photo-caption" id="photoCaption"></div>
+            
+            <div class="photo-nav">
+                <button class="nav-btn" id="prevBtn">❮</button>
                 <div class="photo-indicators" id="indicators"></div>
+                <button class="nav-btn" id="nextBtn">❯</button>
             </div>
         </div>
     </div>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const slider = document.querySelector('.photo-slider');
-            const items = document.querySelectorAll('.photo-item');
+        // Photo gallery data
+        const photos = [
+            { src: 'image1.png', caption: 'Class Photo 1' },
+            { src: 'image2.png', caption: 'Class Photo 2' }
+        ];
+        
+        let currentPhotoIndex = 0;
+        
+        // Initialize the photo gallery
+        function initPhotoGallery() {
+            const container = document.getElementById('photoContainer');
+            const indicators = document.getElementById('indicators');
+            const caption = document.getElementById('photoCaption');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const indicators = [];
-            let currentIndex = 0;
-            let slideInterval;
-
-            function initSlider() {
-                if (items.length > 0) {
-                    items[0].classList.add('active');
-                    updateIndicators();
-                }
-                const indicatorsContainer = document.getElementById('indicators');
-                indicatorsContainer.innerHTML = '';
-                
-                items.forEach((_, index) => {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'indicator' + (index === 0 ? ' active' : '');
-                    indicator.addEventListener('click', () => goToSlide(index));
-                    indicatorsContainer.appendChild(indicator);
-                    indicators.push(indicator);
-                });
-
-                // Touch support
-                let touchStartX = 0;
-                let touchEndX = 0;
-                
-                slider.addEventListener('touchstart', e => {
-                    touchStartX = e.changedTouches[0].screenX;
-                    clearInterval(slideInterval);
-                }, { passive: true });
-                
-                slider.addEventListener('touchend', e => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    handleSwipe();
-                    startAutoSlide();
-                }, { passive: true });
-
-                function handleSwipe() {
-                    if (touchEndX < touchStartX - 30) nextSlide();
-                    if (touchEndX > touchStartX + 30) prevSlide();
-                }
-                
-                startAutoSlide();
-            }
-
-            function goToSlide(index) {
-                if (index < 0) index = items.length - 1;
-                if (index >= items.length) index = 0;
-
-                items.forEach(item => {
-                    item.classList.remove('active', 'prev', 'next');
-                });
-
-                items[currentIndex].classList.add('prev');
-                currentIndex = index;
-                items[currentIndex].classList.add('active');
-
-                updateIndicators();
-            }
-
-            function nextSlide() {
-                goToSlide(currentIndex + 1);
-            }
-
-            function prevSlide() {
-                goToSlide(currentIndex - 1);
-            }
-
-            function updateIndicators() {
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentIndex);
-                });
-            }
             
-            function startAutoSlide() {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(() => {
-                    nextSlide();
-                }, 5000);
-            }
-
-            // Event listeners
-            prevBtn.addEventListener('click', () => {
-                clearInterval(slideInterval);
-                prevSlide();
-                startAutoSlide();
+            // Clear any existing content
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            // Create image elements
+            photos.forEach((photo, index) => {
+                // Create image
+                const img = document.createElement('img');
+                img.src = photo.src;
+                img.alt = photo.caption;
+                img.style.display = 'none';
+                container.appendChild(img);
+                
+                // Create indicator
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => showPhoto(index));
+                indicators.appendChild(indicator);
             });
             
-            nextBtn.addEventListener('click', () => {
-                clearInterval(slideInterval);
-                nextSlide();
-                startAutoSlide();
-            });
-
+            // Show first photo
+            if (photos.length > 0) {
+                showPhoto(0);
+            }
+            
+            // Add event listeners
+            prevBtn.addEventListener('click', showPrevPhoto);
+            nextBtn.addEventListener('click', showNextPhoto);
+            
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowLeft') {
-                    clearInterval(slideInterval);
-                    prevSlide();
-                    startAutoSlide();
-                }
-                if (e.key === 'ArrowRight') {
-                    clearInterval(slideInterval);
-                    nextSlide();
-                    startAutoSlide();
+                    showPrevPhoto();
+                } else if (e.key === 'ArrowRight') {
+                    showNextPhoto();
                 }
             });
-
-            // Pause auto-slide on hover
-            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slider.addEventListener('mouseleave', startAutoSlide);
-
-            // Initialize slider
-            initSlider();
             
-            // Add starfield and comet animations
+            // Touch events for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            container.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            
+            container.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                handleSwipe();
+            }, { passive: true });
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const swipeDiff = touchStartX - touchEndX;
+                
+                if (Math.abs(swipeDiff) > swipeThreshold) {
+                    if (swipeDiff > 0) {
+                        showNextPhoto();
+                    } else {
+                        showPrevPhoto();
+                    }
+                }
+            }
+        }
+        
+        function showPhoto(index) {
+            // Update current index
+            currentPhotoIndex = (index + photos.length) % photos.length;
+            
+            // Update images
+            const images = document.querySelectorAll('#photoContainer img');
+            images.forEach((img, i) => {
+                if (i === currentPhotoIndex) {
+                    img.classList.add('active');
+                    img.style.display = 'block';
+                } else {
+                    img.classList.remove('active');
+                    setTimeout(() => {
+                        img.style.display = 'none';
+                    }, 500);
+                }
+            });
+            
+            // Update indicators
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, i) => {
+                if (i === currentPhotoIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+            
+            // Update caption
+            document.getElementById('photoCaption').textContent = photos[currentPhotoIndex].caption;
+        }
+        
+        function showNextPhoto() {
+            showPhoto(currentPhotoIndex + 1);
+        }
+        
+        function showPrevPhoto() {
+            showPhoto(currentPhotoIndex - 1);
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initPhotoGallery();
             initStarfield();
         });
         
+        // Starfield Animation
         function initStarfield() {
             const canvas = document.getElementById('starsCanvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.height = document.body.scrollHeight;
 
             // Starfield
             const stars = [];
@@ -663,7 +559,7 @@
             // Handle window resize
             window.addEventListener('resize', function() {
                 canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                canvas.height = document.body.scrollHeight;
             });
 
             // Start animation
