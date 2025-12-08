@@ -32,15 +32,15 @@
             position: relative;
             z-index: 10;
             min-height: 100vh;
-            padding: 2rem;
+            padding: clamp(1rem, 3vw, 2rem);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .page-header {
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
+            margin-bottom: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1.2rem, 3vw, 2rem);
             border: 3px solid #ffd700 !important;
             border-radius: 25px;
             background: rgba(0, 0, 0, 0.05) !important;
@@ -50,7 +50,7 @@
             max-width: 1200px;
         }
         .page-title {
-            font-size: 3rem;
+            font-size: clamp(1.3rem, 5vw, 3rem);
             text-transform: uppercase;
             letter-spacing: 0.3em;
             color: #ffd700 !important;
@@ -155,32 +155,85 @@
         <div class="photo-gallery">
             <div class="character-selector">
                 <div class="photo-slider" id="photoSlider">
-                    <!-- Photo 1 -->
+                    <!-- 
+                    ============================================
+                    📸 HOW TO ADD PHOTOS - STEP BY STEP GUIDE
+                    ============================================
+                    
+                    STEP 1: Prepare your images
+                    ---------------------------
+                    - Name your images: image1.jpg, image2.jpg, image3.jpg, etc.
+                    - Supported formats: .jpg, .jpeg, .png, .webp, .gif
+                    - Recommended size: 800x1000px or similar portrait orientation
+                    - Keep file sizes reasonable (under 2MB each for faster loading)
+                    
+                    STEP 2: Place images in the same folder
+                    ---------------------------------------
+                    Put your image files in the SAME folder as this HTML file:
+                    
+                    your-project-folder/
+                    ├── photos.html        ← This file
+                    ├── image1.jpg         ← Your first photo here
+                    ├── image2.jpg         ← Your second photo here
+                    ├── image3.jpg         ← Add more as needed
+                    └── ...
+                    
+                    STEP 3: Add photo items below
+                    ------------------------------
+                    Copy and paste this template for each photo:
+                    
                     <div class="photo-item">
-                       <img src="image1.png" alt="Class Photo 1" onerror="
-  this.parentElement.innerHTML =
-  `<div class='photo-placeholder'>
-     <p>📸 Image 1</p>
-     <p style='font-size: 0.9rem; margin-top: 1rem; opacity: 0.7;'>
-       Make sure image1.png is uploaded
-     </p>
-   </div>`;
-">
+                        <img src="image1.jpg" alt="Description of photo">
                     </div>
                     
-                    <!-- Photo 2 -->
+                    Replace:
+                    - "image1.jpg" with your actual image filename
+                    - "Description of photo" with a brief description
+                    
+                    STEP 4: Update the photo counter (if needed)
+                    --------------------------------------------
+                    The counter will automatically update based on number of photos.
+                    
+                    EXAMPLE - Adding 3 photos:
+                    --------------------------
                     <div class="photo-item">
-                        <img src="image.png" alt="Class Photo 2" onerror="
-  this.parentElement.innerHTML =
-  `<div class='photo-placeholder'>
-     <p>📸 Image 2</p>
-     <p style='font-size: 0.9rem; margin-top: 1rem; opacity: 0.7;'>
-       Make sure image1.png is uploaded
-     </p>
-   </div>`;
-">
-
+                        <img src="class-trip.jpg" alt="Class Trip 2024">
                     </div>
+                    <div class="photo-item">
+                        <img src="graduation.jpg" alt="Graduation Day">
+                    </div>
+                    <div class="photo-item">
+                        <img src="field-day.jpg" alt="Field Day Event">
+                    </div>
+                    
+                    TIPS:
+                    - You can add as many photos as you want
+                    - Photos will automatically be added to the slider
+                    - Use arrow buttons or swipe to navigate
+                    - Click on side photos to jump to them
+                    
+                    ============================================
+                    -->
+                    
+                    <!-- Photo 1 - Replace image1.jpg with your actual image filename -->
+                    <div class="photo-item">
+                        <img src="image1.jpg" alt="Class Photo 1" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'><p>📸 Image 1</p><p style=\'font-size: 0.9rem; margin-top: 1rem; opacity: 0.7;\'>Place image1.jpg in the same folder as photos.html</p></div>'">
+                    </div>
+                    
+                    <!-- Photo 2 - Replace image2.jpg with your actual image filename -->
+                    <div class="photo-item">
+                        <img src="image2.jpg" alt="Class Photo 2" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'><p>📸 Image 2</p><p style=\'font-size: 0.9rem; margin-top: 1rem; opacity: 0.7;\'>Place image2.jpg in the same folder as photos.html</p></div>'">
+                    </div>
+                    
+                    <!-- 
+                    ADD MORE PHOTOS HERE:
+                    Copy the template above and change the image filename
+                    
+                    Example for Photo 3:
+                    <div class="photo-item">
+                        <img src="image3.jpg" alt="Class Photo 3">
+                    </div>
+                    -->
                 </div>
                 
                 <div class="photo-controls">
