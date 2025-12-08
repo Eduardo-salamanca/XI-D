@@ -139,9 +139,126 @@
         }
         .photo-gallery {
             width: 100%;
-            max-width: 1200px;
-            margin-top: 2rem;
+            max-width: 500px;
+            margin: 2rem auto;
             position: relative;
+            perspective: 1000px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .photo-slider {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .photo-item {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+            transform: translateX(100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .photo-item.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+        
+        .photo-item.prev {
+            transform: translateX(-100%);
+            z-index: 5;
+        }
+        
+        .photo-item.next {
+            transform: translateX(100%);
+            z-index: 5;
+        }
+        
+        .photo-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-item img:hover {
+            transform: scale(1.02);
+        }
+        
+        .photo-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 20;
+            transform: translateY(-50%);
+        }
+        
+        .photo-btn {
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .photo-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .photo-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 20;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .indicator.active {
+            background: #ffd700;
+            transform: scale(1.2);
+            border-color: #fff;
         }
     </style>
 </head>
@@ -155,87 +272,34 @@
         <div class="photo-gallery">
             <div class="character-selector">
                 <div class="photo-slider" id="photoSlider">
-                    <!-- 
-                    ============================================
-                    📸 HOW TO ADD PHOTOS - STEP BY STEP GUIDE
-                    ============================================
-                    
-                    STEP 1: Prepare your images
-                    ---------------------------
-                    - Name your images: image1.jpg, image2.jpg, image3.jpg, etc.
-                    - Supported formats: .jpg, .jpeg, .png, .webp, .gif
-                    - Recommended size: 800x1000px or similar portrait orientation
-                    - Keep file sizes reasonable (under 2MB each for faster loading)
-                    
-                    STEP 2: Place images in the same folder
-                    ---------------------------------------
-                    Put your image files in the SAME folder as this HTML file:
-                    
-                    your-project-folder/
-                    ├── photos.html        ← This file
-                    ├── image1.jpg         ← Your first photo here
-                    ├── image2.jpg         ← Your second photo here
-                    ├── image3.jpg         ← Add more as needed
-                    └── ...
-                    
-                    STEP 3: Add photo items below
-                    ------------------------------
-                    Copy and paste this template for each photo:
-                    
+                    <!-- Photo 1 -->
                     <div class="photo-item">
-                        <img src="image1.jpg" alt="Description of photo">
-                    </div>
-                    
-                    Replace:
-                    - "image1.jpg" with your actual image filename
-                    - "Description of photo" with a brief description
-                    
-                    STEP 4: Update the photo counter (if needed)
-                    --------------------------------------------
-                    The counter will automatically update based on number of photos.
-                    
-                    EXAMPLE - Adding 3 photos:
-                    --------------------------
-                    <div class="photo-item">
-                        <img src="class-trip.jpg" alt="Class Trip 2024">
-                    </div>
-                    <div class="photo-item">
-                        <img src="graduation.jpg" alt="Graduation Day">
-                    </div>
-                    <div class="photo-item">
-                        <img src="field-day.jpg" alt="Field Day Event">
-                    </div>
-                    
-                    TIPS:
-                    - You can add as many photos as you want
-                    - Photos will automatically be added to the slider
-                    - Use arrow buttons or swipe to navigate
-                    - Click on side photos to jump to them
-                    
-                    ============================================
-                    -->
-                    
-                    <!-- Photo 1 - Replace image1.jpg with your actual image filename -->
-                    <div class="photo-item" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                        <img src="./image1.png" alt="Class Photo 1" style="max-width: 100%; max-height: 100%; object-fit: contain;" 
+                        <img src="./image1.png" alt="Class Photo 1" 
                              onerror="this.onerror=null; this.src='./image1.png'; this.alt='Image not found';">
                     </div>
                     
-                    <div class="photo-item" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                        <img src="./image.png" alt="Class Photo 2" style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                    <!-- Photo 2 -->
+                    <div class="photo-item">
+                        <img src="./image.png" alt="Class Photo 2"
                              onerror="this.onerror=null; this.src='./image.png'; this.alt='Image not found';">
                     </div>
                     
                     <!-- 
-                    ADD MORE PHOTOS HERE:
-                    Copy the template above and change the image filename
+                    HOW TO ADD MORE PHOTOS:
+                    Copy and paste this template, then update the src and alt text:
                     
-                    Example for Photo 3:
                     <div class="photo-item">
-                        <img src="image3.jpg" alt="Class Photo 3">
+                        <img src="your-image.jpg" alt="Your image description">
                     </div>
                     -->
                 </div>
+                
+                <div class="photo-controls">
+                    <button class="photo-btn" id="prevBtn">❮</button>
+                    <button class="photo-btn" id="nextBtn">❯</button>
+                </div>
+                
+                <div class="photo-indicators" id="indicators"></div>
                 
                 <div class="photo-controls">
                     <button class="photo-btn" id="prevBtn">←</button>
@@ -250,6 +314,127 @@
         </div>
     </div>
     
-    <script src="photos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.querySelector('.photo-slider');
+            const items = document.querySelectorAll('.photo-item');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicators = [];
+            let currentIndex = 0;
+            
+            // Initialize slider
+            function initSlider() {
+                // Set first item as active
+                if (items.length > 0) {
+                    items[0].classList.add('active');
+                    updateIndicators();
+                }
+                
+                // Create indicators
+                const indicatorsContainer = document.getElementById('indicators');
+                items.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'indicator' + (index === 0 ? ' active' : '');
+                    indicator.addEventListener('click', () => goToSlide(index));
+                    indicatorsContainer.appendChild(indicator);
+                    indicators.push(indicator);
+                });
+                
+                // Add touch support
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                slider.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, false);
+                
+                slider.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, false);
+                
+                function handleSwipe() {
+                    if (touchEndX < touchStartX) {
+                        nextSlide();
+                    }
+                    if (touchEndX > touchStartX) {
+                        prevSlide();
+                    }
+                }
+            }
+            
+            // Navigation functions
+            function goToSlide(index) {
+                if (index < 0) index = items.length - 1;
+                if (index >= items.length) index = 0;
+                
+                items[currentIndex].classList.remove('active');
+                items[currentIndex].classList.add('prev');
+                
+                currentIndex = index;
+                
+                items[currentIndex].classList.add('active');
+                items[currentIndex].classList.remove('prev', 'next');
+                
+                updateIndicators();
+            }
+            
+            function nextSlide() {
+                items[currentIndex].classList.remove('active');
+                items[currentIndex].classList.add('prev');
+                
+                currentIndex = (currentIndex + 1) % items.length;
+                
+                items[currentIndex].classList.add('active');
+                items[currentIndex].classList.remove('prev', 'next');
+                
+                updateIndicators();
+            }
+            
+            function prevSlide() {
+                items[currentIndex].classList.remove('active');
+                items[currentIndex].classList.add('next');
+                
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+                
+                items[currentIndex].classList.add('active');
+                items[currentIndex].classList.remove('prev', 'next');
+                
+                updateIndicators();
+            }
+            
+            function updateIndicators() {
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentIndex);
+                });
+            }
+            
+            // Event listeners
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'ArrowRight') nextSlide();
+            });
+            
+            // Auto-advance (optional)
+            let slideInterval = setInterval(nextSlide, 5000);
+            
+            // Pause on hover
+            slider.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+            
+            slider.addEventListener('mouseleave', () => {
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+            
+            // Initialize the slider
+            initSlider();
+        });
+    </script>
 </body>
 </html>
