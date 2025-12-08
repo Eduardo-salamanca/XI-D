@@ -83,6 +83,70 @@
             text-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.5);
             margin: 0;
         }
+        .logo-section {
+            margin-top: clamp(0.8rem, 2vw, 1.5rem);
+            padding: clamp(0.8rem, 2vw, 1.5rem);
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.08);
+        }
+        .logo-guide-title {
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.4rem;
+            color: #ffd700 !important;
+            text-transform: uppercase;
+        }
+        .logo-outline {
+            position: relative;
+            border: 2px dashed rgba(255, 215, 0, 0.5);
+            border-radius: 14px;
+            padding: clamp(0.9rem, 2vw, 1.5rem);
+            background: rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .logo-outline::before, .logo-outline::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            pointer-events: none;
+        }
+        .logo-outline::before {
+            border: 2px solid rgba(255, 215, 0, 0.45);
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
+        }
+        .logo-outline::after {
+            background: conic-gradient(
+                from 0deg,
+                rgba(255, 215, 0, 0.0),
+                rgba(255, 215, 0, 0.85),
+                rgba(255, 215, 0, 0.0) 25%,
+                rgba(255, 215, 0, 0.75),
+                rgba(255, 215, 0, 0.0) 50%,
+                rgba(255, 215, 0, 0.85),
+                rgba(255, 215, 0, 0.0) 75%,
+                rgba(255, 215, 0, 0.9)
+            );
+            mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+            mask-composite: exclude;
+            animation: neonSpin 6s linear infinite;
+            opacity: 0.9;
+        }
+        @keyframes neonSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .logo-placeholder {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            color: #ffd700;
+            line-height: 1.5;
+            font-size: clamp(0.9rem, 2.4vw, 1.05rem);
+        }
+        .logo-placeholder strong {
+            color: #ffeb7a;
+        }
         .navigation {
             display: flex;
             flex-direction: column;
@@ -142,6 +206,43 @@
         <div class="main-frame">
             <header class="frame-header">
                 <h1 class="frame-title">Class Portal</h1>
+                <div class="logo-section">
+                    <div class="logo-guide-title">Add your class logo</div>
+                    <div class="logo-outline">
+                        <div class="logo-placeholder">
+                            <!-- 
+                            ============================================
+                            🪙 HOW TO ADD YOUR LOGO (manual guide)
+                            ============================================
+                            
+                            STEP 1: Prepare your logo
+                            -------------------------
+                            - Recommended: transparent PNG (512x512 or similar)
+                            - Other formats: .png, .jpg, .jpeg, .webp, .gif
+                            
+                            STEP 2: Place the logo file
+                            ---------------------------
+                            Put your logo file in the SAME folder as this HTML:
+                            
+                            your-project-folder/
+                            ├── index.html    ← this file
+                            ├── logo.png      ← your logo file (example name)
+                            └── ...
+                            
+                            STEP 3: Display the logo
+                            ------------------------
+                            Replace "logo.png" in the <img> tag below with your filename:
+                            
+                            <img class="class-logo" src="logo.png" alt="Class Logo">
+                            
+                            TIP: Keep the filename simple (no spaces). 
+                            ============================================
+                            -->
+                            <strong>Place your logo file next to index.html, then swap the src below.</strong><br>
+                            <img class="class-logo" src="logo.png" alt="Class Logo" style="margin-top:0.8rem; max-width:200px; width:100%; filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); border-radius:12px;" onerror="this.outerHTML='<p style=\'opacity:0.8;\'>Preview will show here after you place your logo file and set the src.</p>'">
+                        </div>
+                    </div>
+                </div>
             </header>
             
             <nav class="navigation">
