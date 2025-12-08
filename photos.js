@@ -109,6 +109,36 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Touch swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+if (photoSlider) {
+    photoSlider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    photoSlider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - next photo
+            nextPhoto();
+        } else {
+            // Swipe right - previous photo
+            prevPhoto();
+        }
+    }
+}
+
 // Initialize
 refreshPhotos();
 
