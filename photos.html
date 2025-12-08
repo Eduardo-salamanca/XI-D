@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Memory - XI-D</title>
+    <title>Photos Memory - XI-D</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Critical styles - ensures design works even if CSS file doesn't load */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         body {
-            font-family: 'Courier New', monospace;
-            background: #000 !important;
-            color: #ffd700 !important;
+            font-family: 'Rajdhani', 'Courier New', monospace;
+            background: #0a0a12 !important;
+            color: #0ff !important;
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
         .photos-page {
             background:
-                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important;
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%) !important;
             position: relative;
             overflow: hidden;
         }
@@ -37,99 +41,122 @@
             text-align: center;
             margin-bottom: clamp(1.5rem, 4vw, 3rem);
             padding: clamp(1.2rem, 3vw, 2rem);
-            border: 3px solid #ffd700 !important;
-            border-radius: 25px;
-            background: rgba(0, 0, 0, 0.05) !important;
-            backdrop-filter: blur(3px);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(10px);
+            position: relative;
+            max-width: 95%;
+            clip-path: polygon(
+                0 20px, 
+                20px 0, 
+                calc(100% - 20px) 0, 
+                100% 20px, 
+                100% calc(100% - 20px), 
+                calc(100% - 20px) 100%, 
+                20px 100%, 
+                0 calc(100% - 20px)
+            );
+            border: 2px solid #0ff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
             width: 100%;
             max-width: 1200px;
         }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(0, 255, 255, 0.1) 0%, 
+                rgba(255, 0, 255, 0.1) 50%, 
+                rgba(0, 255, 255, 0.1) 100%);
+            z-index: -1;
+            animation: scan 8s linear infinite;
+            opacity: 0.5;
+        }
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 200% 0; }
+        }
         .page-title {
-            font-size: clamp(1.3rem, 5vw, 3rem);
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
             text-transform: uppercase;
             letter-spacing: 0.3em;
-            color: #ffd700 !important;
-            text-shadow:
-                0 0 10px #ffd700,
-                0 0 20px rgba(255, 215, 0, 0.5);
-            margin-bottom: 1rem;
+            color: #0ff !important;
+            text-shadow: 
+                0 0 10px #0ff,
+                0 0 20px rgba(0, 255, 255, 0.7),
+                0 0 40px rgba(0, 255, 255, 0.3);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
         }
-
-        /* MOBILE: tighter padding + higher photo position */
-        @media (max-width: 768px) {
-            .photos-container { padding: 0.5rem; }
-            .page-header {
-                padding: 1rem 0.75rem;
-                margin: 1rem auto 1.2rem;
-                width: 95%;
-            }
-            .page-title {
-                font-size: 1.5rem;
-                letter-spacing: 0.18em;
-                margin-bottom: 0.6rem;
-            }
-            .back-link {
-                padding: 0.55rem 1.2rem;
-                font-size: 0.85rem;
-            }
-            .photo-gallery {
-                width: 95%;
-                margin: 0.4rem auto;
-            }
-            .photo-slider {
-                height: 65vh;          /* a bit shorter to lift the image */
-                min-height: 300px;
-                max-height: 520px;
-                padding: 0;
-                margin: 0.2rem auto 0.6rem;
-                align-items: center;   /* keep items vertically centered */
-            }
-            .photo-item { padding: 10px; }
-            .photo-item img { max-height: 90%; max-width: 100%; }
-            .photo-controls { padding: 0 6px; }
-            .photo-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 1.1rem;
-            }
-            .photo-indicators { bottom: 10px; }
-            .indicator { width: 10px; height: 10px; }
-        }
-
         .back-link {
             display: inline-block;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             padding: 0.8rem 2rem;
-            color: #ffd700 !important;
+            color: #0ff !important;
             text-decoration: none;
-            border: 2px solid #ffd700 !important;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.1) !important;
-            backdrop-filter: blur(10px);
+            border: 2px solid #0ff !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(5px);
             transition: all 0.3s ease;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(
+                0 10px, 
+                10px 0, 
+                calc(100% - 10px) 0, 
+                100% 10px, 
+                100% calc(100% - 10px), 
+                calc(100% - 10px) 100%, 
+                10px 100%, 
+                0 calc(100% - 10px)
+            );
+        }
+        .back-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
         }
         .back-link:hover {
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 
+                       inset 0 0 15px rgba(0, 255, 255, 0.1);
             transform: translateY(-3px);
-            border-color: #ffed4e !important;
-            background: rgba(0, 0, 0, 0.15) !important;
+            border-color: #0ff !important;
+            background: rgba(0, 0, 0, 0.4) !important;
+            color: #fff !important;
         }
-
+        .back-link:hover::before {
+            left: 100%;
+        }
         .photo-gallery {
             width: 90%;
-            max-width: 500px;
-            margin: 1rem auto;
+            max-width: 900px;
+            margin: 1.5rem auto;
             position: relative;
             perspective: 1000px;
             overflow: hidden;
             border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 20px;
         }
-
         .photo-slider {
             position: relative;
             width: 100%;
@@ -137,29 +164,30 @@
             max-height: 800px;
             min-height: 400px;
             overflow: hidden;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            background: rgba(0, 10, 15, 0.5);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 255, 255, 0.1),
+                0 0 30px rgba(0, 0, 0, 0.8);
             margin: 0 auto;
             display: flex;
             justify-content: center;
-            align-items: center; /* vertical centering */
+            align-items: center;
+            border: 1px solid rgba(0, 255, 255, 0.2);
         }
-
-        /* Center items vertically and animate horizontally */
         .photo-item {
             position: absolute;
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: all 0.8s ease-in-out;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translate(-50%, -50%) translateX(100%);
             top: 50%;
             left: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
             box-sizing: border-box;
             margin: 0 auto;
         }
@@ -176,21 +204,23 @@
             transform: translate(-50%, -50%) translateX(100%);
             z-index: 5;
         }
-
         .photo-item img {
             max-width: 100%;
             max-height: 100%;
             width: auto;
             height: auto;
             object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-            display: block;
-            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
         }
-        .photo-item img:hover { transform: scale(1.02); }
-
+        .photo-item img:hover { 
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 255, 255, 0.3);
+        }
         .photo-controls {
             position: absolute;
             top: 50%;
@@ -198,14 +228,15 @@
             right: 0;
             display: flex;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
             z-index: 20;
             transform: translateY(-50%);
+            pointer-events: none;
         }
         .photo-btn {
-            background: rgba(0, 0, 0, 0.5);
-            color: #ffd700;
-            border: 2px solid #ffd700;
+            background: rgba(0, 20, 30, 0.7) !important;
+            color: #0ff !important;
+            border: 2px solid #0ff !important;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -216,12 +247,35 @@
             justify-content: center;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        .photo-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
         }
         .photo-btn:hover {
-            background: rgba(255, 215, 0, 0.2);
+            background: rgba(0, 40, 60, 0.8) !important;
             transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+            color: #fff !important;
         }
-
+        .photo-btn:hover::before {
+            left: 100%;
+        }
         .photo-indicators {
             position: absolute;
             bottom: 20px;
@@ -229,26 +283,92 @@
             right: 0;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             z-index: 20;
+            padding: 10px;
+            background: rgba(0, 10, 20, 0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 30px;
+            margin: 0 auto;
+            width: fit-content;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
         .indicator {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
         }
         .indicator.active {
-            background: #ffd700;
-            transform: scale(1.2);
+            background: #0ff;
+            transform: scale(1.3);
             border-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+        .indicator:hover {
+            background: rgba(0, 255, 255, 0.7);
+        }
+        /* MOBILE: tighter padding + higher photo position */
+        @media (max-width: 768px) {
+            .photos-container { 
+                padding: 0.5rem; 
+            }
+            .page-header {
+                padding: 1.2rem 0.8rem;
+                margin: 0.5rem auto 1.2rem;
+                width: 95%;
+            }
+            .page-title {
+                font-size: 1.6rem;
+                letter-spacing: 0.2em;
+                margin-bottom: 1rem;
+            }
+            .back-link {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            .photo-gallery {
+                width: 98%;
+                margin: 0.5rem auto;
+                padding: 10px;
+            }
+            .photo-slider {
+                height: 60vh;
+                min-height: 350px;
+                max-height: 500px;
+            }
+            .photo-item {
+                padding: 10px;
+            }
+            .photo-controls {
+                padding: 0 5px;
+            }
+            .photo-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            .photo-indicators {
+                bottom: 10px;
+                padding: 8px;
+                gap: 8px;
+            }
+            .indicator {
+                width: 10px;
+                height: 10px;
+            }
         }
     </style>
 </head>
 <body class="photos-page">
+    <canvas id="starsCanvas"></canvas>
+    <canvas id="cometsCanvas"></canvas>
+    
     <div class="photos-container">
         <div class="page-header">
             <h1 class="page-title">Photo Memory</h1>
@@ -259,7 +379,7 @@
             <div class="character-selector">
                 <div class="photo-slider" id="photoSlider">
                     <!-- Photo 1 -->
-                    <div class="photo-item">
+                    <div class="photo-item active">
                         <img src="./image1.png" alt="Class Photo 1"
                              onerror="this.onerror=null; this.src='./image1.png'; this.alt='Image not found';">
                     </div>
@@ -268,15 +388,6 @@
                         <img src="./image.png" alt="Class Photo 2"
                              onerror="this.onerror=null; this.src='./image.png'; this.alt='Image not found';">
                     </div>
-
-                    <!--
-                    HOW TO ADD MORE PHOTOS:
-                    Copy/paste, then update src and alt text:
-
-                    <div class="photo-item">
-                        <img src="your-image.jpg" alt="Your image description">
-                    </div>
-                    -->
                 </div>
 
                 <div class="photo-controls">
@@ -297,6 +408,7 @@
             const nextBtn = document.getElementById('nextBtn');
             const indicators = [];
             let currentIndex = 0;
+            let slideInterval;
 
             function initSlider() {
                 if (items.length > 0) {
@@ -304,6 +416,8 @@
                     updateIndicators();
                 }
                 const indicatorsContainer = document.getElementById('indicators');
+                indicatorsContainer.innerHTML = '';
+                
                 items.forEach((_, index) => {
                     const indicator = document.createElement('div');
                     indicator.className = 'indicator' + (index === 0 ? ' active' : '');
@@ -315,57 +429,47 @@
                 // Touch support
                 let touchStartX = 0;
                 let touchEndX = 0;
+                
                 slider.addEventListener('touchstart', e => {
                     touchStartX = e.changedTouches[0].screenX;
-                }, false);
+                    clearInterval(slideInterval);
+                }, { passive: true });
+                
                 slider.addEventListener('touchend', e => {
                     touchEndX = e.changedTouches[0].screenX;
                     handleSwipe();
-                }, false);
+                    startAutoSlide();
+                }, { passive: true });
 
                 function handleSwipe() {
                     if (touchEndX < touchStartX - 30) nextSlide();
                     if (touchEndX > touchStartX + 30) prevSlide();
                 }
+                
+                startAutoSlide();
             }
 
             function goToSlide(index) {
                 if (index < 0) index = items.length - 1;
                 if (index >= items.length) index = 0;
 
-                items[currentIndex].classList.remove('active');
+                items.forEach(item => {
+                    item.classList.remove('active', 'prev', 'next');
+                });
+
                 items[currentIndex].classList.add('prev');
-
                 currentIndex = index;
-
                 items[currentIndex].classList.add('active');
-                items[currentIndex].classList.remove('prev', 'next');
 
                 updateIndicators();
             }
 
             function nextSlide() {
-                items[currentIndex].classList.remove('active');
-                items[currentIndex].classList.add('prev');
-
-                currentIndex = (currentIndex + 1) % items.length;
-
-                items[currentIndex].classList.add('active');
-                items[currentIndex].classList.remove('prev', 'next');
-
-                updateIndicators();
+                goToSlide(currentIndex + 1);
             }
 
             function prevSlide() {
-                items[currentIndex].classList.remove('active');
-                items[currentIndex].classList.add('next');
-
-                currentIndex = (currentIndex - 1 + items.length) % items.length;
-
-                items[currentIndex].classList.add('active');
-                items[currentIndex].classList.remove('prev', 'next');
-
-                updateIndicators();
+                goToSlide(currentIndex - 1);
             }
 
             function updateIndicators() {
@@ -373,23 +477,198 @@
                     indicator.classList.toggle('active', index === currentIndex);
                 });
             }
+            
+            function startAutoSlide() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(() => {
+                    nextSlide();
+                }, 5000);
+            }
 
-            prevBtn.addEventListener('click', prevSlide);
-            nextBtn.addEventListener('click', nextSlide);
+            // Event listeners
+            prevBtn.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                prevSlide();
+                startAutoSlide();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                nextSlide();
+                startAutoSlide();
+            });
 
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') prevSlide();
-                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') {
+                    clearInterval(slideInterval);
+                    prevSlide();
+                    startAutoSlide();
+                }
+                if (e.key === 'ArrowRight') {
+                    clearInterval(slideInterval);
+                    nextSlide();
+                    startAutoSlide();
+                }
             });
 
-            // Auto-advance
-            let slideInterval = setInterval(nextSlide, 5000);
+            // Pause auto-slide on hover
             slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slider.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 5000));
+            slider.addEventListener('mouseleave', startAutoSlide);
 
+            // Initialize slider
             initSlider();
+            
+            // Add starfield and comet animations
+            initStarfield();
         });
+        
+        function initStarfield() {
+            const canvas = document.getElementById('starsCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Starfield
+            const stars = [];
+            const starCount = Math.floor(window.innerWidth * window.innerHeight / 1500);
+            
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5,
+                    speed: Math.random() * 0.5,
+                    alpha: Math.random()
+                });
+            }
+
+            // Comets
+            const comets = [];
+            const cometCount = 2;
+            
+            for (let i = 0; i < cometCount; i++) {
+                createComet();
+            }
+
+            function createComet() {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 3;
+                const size = 2 + Math.random() * 3;
+                const length = 50 + Math.random() * 100;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                
+                comets.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: size,
+                    length: length,
+                    particles: []
+                });
+            }
+
+            function updateComets() {
+                for (let i = comets.length - 1; i >= 0; i--) {
+                    const comet = comets[i];
+                    
+                    // Update position
+                    comet.x += comet.vx;
+                    comet.y += comet.vy;
+                    
+                    // Add particle to trail
+                    comet.particles.unshift({
+                        x: comet.x,
+                        y: comet.y,
+                        alpha: 1
+                    });
+                    
+                    // Remove old particles
+                    if (comet.particles.length > comet.length) {
+                        comet.particles.pop();
+                    }
+                    
+                    // Fade out particles
+                    for (let j = 0; j < comet.particles.length; j++) {
+                        comet.particles[j].alpha -= 1 / comet.length;
+                    }
+                    
+                    // Remove dead comets and create new ones
+                    if (comet.x < -100 || comet.x > canvas.width + 100 || 
+                        comet.y < -100 || comet.y > canvas.height + 100) {
+                        comets.splice(i, 1);
+                        createComet();
+                    }
+                }
+            }
+
+            function draw() {
+                // Clear with fade effect
+                ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw stars
+                ctx.fillStyle = '#fff';
+                stars.forEach(star => {
+                    // Twinkle effect
+                    star.alpha += (Math.random() * 0.2 - 0.1);
+                    star.alpha = Math.max(0.2, Math.min(1, star.alpha));
+                    
+                    ctx.globalAlpha = star.alpha;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                
+                // Draw comets
+                comets.forEach(comet => {
+                    // Draw tail
+                    for (let i = 0; i < comet.particles.length; i++) {
+                        const p = comet.particles[i];
+                        const gradient = ctx.createRadialGradient(
+                            p.x, p.y, 0,
+                            p.x, p.y, comet.size * 2 * (i / comet.particles.length)
+                        );
+                        gradient.addColorStop(0, `rgba(0, 255, 255, ${p.alpha})`);
+                        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                        
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, comet.size * 2 * (i / comet.particles.length), 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Draw head
+                    const gradient = ctx.createRadialGradient(
+                        comet.x, comet.y, 0,
+                        comet.x, comet.y, comet.size * 2
+                    );
+                    gradient.addColorStop(0, '#fff');
+                    gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.5)');
+                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(comet.x, comet.y, comet.size * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                updateComets();
+                requestAnimationFrame(draw);
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            // Start animation
+            draw();
+        }
     </script>
 </body>
 </html>
