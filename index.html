@@ -298,11 +298,19 @@
     </div>
     
     <script>
-        // Stars background
+        // Get canvas elements and contexts
         const starsCanvas = document.getElementById('starsCanvas');
-        const cometsCanvas = document.getElementById('cometsCanvas');
         const starsCtx = starsCanvas.getContext('2d');
+        const cometsCanvas = document.getElementById('cometsCanvas');
         const cometsCtx = cometsCanvas.getContext('2d');
+        
+        // Ensure canvas is properly sized
+        function resizeCanvas() {
+            starsCanvas.width = window.innerWidth;
+            starsCanvas.height = window.innerHeight;
+            cometsCanvas.width = window.innerWidth;
+            cometsCanvas.height = window.innerHeight;
+        }
         
         // Set canvas size
         function resizeCanvas() {
@@ -353,35 +361,30 @@
         let comets = [];
         
         function createComet() {
-            const side = Math.floor(Math.random() * 4);
-            let x, y, vx, vy;
+            // Always start from top-left area
+            const startX = Math.random() * cometsCanvas.width * 0.3;
+            const startY = -20; // Start above the viewport
             
-            switch(side) {
-                case 0: // top
-                    x = Math.random() * cometsCanvas.width;
-                    y = 0;
-                    vx = (Math.random() - 0.5) * 2;
-                    vy = Math.random() * 2 + 1;
-                    break;
-                case 1: // right
-                    x = cometsCanvas.width;
-                    y = Math.random() * cometsCanvas.height;
-                    vx = -Math.random() * 2 - 1;
-                    vy = (Math.random() - 0.5) * 2;
-                    break;
-                case 2: // bottom
-                    x = Math.random() * cometsCanvas.width;
-                    y = cometsCanvas.height;
-                    vx = (Math.random() - 0.5) * 2;
-                    vy = -Math.random() * 2 - 1;
-                    break;
-                case 3: // left
-                    x = 0;
-                    y = Math.random() * cometsCanvas.height;
-                    vx = Math.random() * 2 + 1;
-                    vy = (Math.random() - 0.5) * 2;
-                    break;
-            }
+            // Calculate target point at right side of screen
+            const targetX = cometsCanvas.width + 50;
+            const targetY = startY + 100 + Math.random() * (cometsCanvas.height * 0.6);
+            
+            // Calculate angle to target
+            const dx = targetX - startX;
+            const dy = targetY - startY;
+            const angle = Math.atan2(dy, dx);
+            
+            // Random speed and size
+            const speed = 8 + Math.random() * 4; // Faster speed
+            const size = 2 + Math.random() * 2; // Bigger size
+            
+            // Calculate velocity
+            let vx = Math.cos(angle) * speed;
+            let vy = Math.sin(angle) * speed;
+            
+            // Make sure comets are moving right
+            if (vx < 0) vx = -vx;
+            if (Math.abs(vx) < 2) vx = 2 * Math.sign(vx || 1);
             
             comets.push({
                 x, y, vx, vy,
@@ -390,12 +393,14 @@
                 tail: []
             });
             
-            // Random time for next comet
-            setTimeout(createComet, Math.random() * 5000 + 2000);
+            // Create new comets more frequently
+            setTimeout(createComet, Math.random() * 1500 + 500);
         }
         
         function drawComets() {
-            cometsCtx.clearRect(0, 0, cometsCanvas.width, cometsCanvas.height);
+            // Clear with a semi-transparent black to create a trail effect
+            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
             
             for (let i = comets.length - 1; i >= 0; i--) {
                 const comet = comets[i];
@@ -404,33 +409,75 @@
                 comet.x += comet.vx;
                 comet.y += comet.vy;
                 
-                // Add current position to tail
-                comet.tail.push({x: comet.x, y: comet.y});
+                // Add current position to tail with timestamp
+                comet.tail.push({
+                    x: comet.x,
+                    y: comet.y,
+                    time: Date.now()
+                });
                 
-                // Limit tail length
-                if (comet.tail.length > 20) {
+                // Remove old tail points (older than 1000ms)
+                const now = Date.now();
+                while (comet.tail.length > 0 && now - comet.tail[0].time > 1000) {
                     comet.tail.shift();
                 }
                 
-                // Draw tail
-                cometsCtx.strokeStyle = `rgba(255, 215, 0, ${comet.alpha})`;
-                cometsCtx.lineWidth = comet.size;
-                cometsCtx.lineCap = 'round';
-                cometsCtx.lineJoin = 'round';
-                cometsCtx.beginPath();
-                
+                // Draw tail with brighter gradient
                 if (comet.tail.length > 1) {
+                    // Create gradient for tail
+                    const gradient = cometsCtx.createLinearGradient(
+                        comet.tail[0].x, comet.tail[0].y,
+                        comet.tail[comet.tail.length - 1].x, comet.tail[comet.tail.length - 1].y
+                    );
+                    gradient.addColorStop(0, `rgba(255, 255, 255, ${comet.alpha * 0.5})`);
+                    gradient.addColorStop(0.5, `rgba(255, 240, 100, ${comet.alpha * 0.8})`);
+                    gradient.addColorStop(1, `rgba(255, 200, 0, ${comet.alpha})`);
+                    
+                    cometsCtx.strokeStyle = gradient;
+                    cometsCtx.lineWidth = comet.size;
+                    cometsCtx.lineCap = 'round';
+                    cometsCtx.lineJoin = 'round';
+                    
+                    // Draw smooth curve through tail points
+                    cometsCtx.beginPath();
                     cometsCtx.moveTo(comet.tail[0].x, comet.tail[0].y);
-                    for (let j = 1; j < comet.tail.length; j++) {
-                        cometsCtx.lineTo(comet.tail[j].x, comet.tail[j].y);
+                    
+                    for (let j = 1; j < comet.tail.length - 1; j++) {
+                        const xc = (comet.tail[j].x + comet.tail[j + 1].x) / 2;
+                        const yc = (comet.tail[j].y + comet.tail[j + 1].y) / 2;
+                        cometsCtx.quadraticCurveTo(comet.tail[j].x, comet.tail[j].y, xc, yc);
                     }
+                    
+                    // Draw last segment
+                    if (comet.tail.length > 1) {
+                        const last = comet.tail.length - 1;
+                        cometsCtx.quadraticCurveTo(
+                            comet.tail[last].x, comet.tail[last].y,
+                            comet.tail[last].x, comet.tail[last].y
+                        );
+                    }
+                    
                     cometsCtx.stroke();
                 }
                 
-                // Draw comet head
-                cometsCtx.fillStyle = `rgba(255, 215, 0, ${comet.alpha})`;
+                // Draw comet head with glow
+                const headGradient = cometsCtx.createRadialGradient(
+                    comet.x, comet.y, 0,
+                    comet.x, comet.y, comet.size * 2.5
+                );
+                headGradient.addColorStop(0, `rgba(255, 255, 200, ${comet.alpha})`);
+                headGradient.addColorStop(0.7, `rgba(255, 230, 150, ${comet.alpha * 0.7})`);
+                headGradient.addColorStop(1, `rgba(255, 215, 0, 0)`);
+                
+                cometsCtx.fillStyle = headGradient;
                 cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 1.5, 0, Math.PI * 2);
+                cometsCtx.arc(comet.x, comet.y, comet.size * 2.5, 0, Math.PI * 2);
+                cometsCtx.fill();
+                
+                // Draw bright core
+                cometsCtx.fillStyle = `rgba(255, 255, 255, ${comet.alpha})`;
+                cometsCtx.beginPath();
+                cometsCtx.arc(comet.x, comet.y, comet.size * 0.8, 0, Math.PI * 2);
                 cometsCtx.fill();
                 
                 // Fade out
@@ -453,10 +500,22 @@
             initStars();
         });
         
+        // Initial setup
         resizeCanvas();
         initStars();
         drawStars();
-        createComet();
+        
+        // Create initial comets
+        createComet(); // Create first comet immediately
+        
+        // Create more comets at intervals
+        setInterval(() => {
+            if (comets.length < 5) { // Keep max 5 comets at a time
+                createComet();
+            }
+        }, 1500);
+        
+        // Start the animation loop
         drawComets();
     </script>
 </body>
