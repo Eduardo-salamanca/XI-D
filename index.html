@@ -309,7 +309,7 @@
         
         // Initialize stars
         let stars = [];
-        const starCount = 500; // Increased number of stars
+        const starCount = 200; // Reduced number of stars
         
         function initStars() {
             stars = [];
@@ -317,33 +317,33 @@
                 stars.push({
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
-                    size: 1.5 + Math.random() * 2.5, // Larger stars (1.5-4px)
-                    speed: 0.1 + Math.random() * 0.3, // Slower movement
-                    alpha: 0.9 + Math.random() * 0.1, // Very bright stars (0.9-1.0)
-                    glow: 1.5 + Math.random() * 2.5, // Larger glow
-                    baseAlpha: 0.8 + Math.random() * 0.2 // Base brightness for twinkling
+                    size: 0.5 + Math.random() * 1, // Smaller stars (0.5-1.5px)
+                    speed: 0.05 + Math.random() * 0.15, // Slower movement
+                    alpha: 0.3 + Math.random() * 0.4, // Less bright (0.3-0.7)
+                    glow: 0.5 + Math.random() * 1, // Smaller glow
+                    baseAlpha: 0.3 + Math.random() * 0.4 // Base brightness for twinkling
                 });
             }
         }
         
         // Draw stars
         function drawStars() {
-            // Clear with a very dark blue background
-            starsCtx.fillStyle = '#050510';
+            // Clear with a dark blue background
+            starsCtx.fillStyle = '#0a0a1a';
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
             // Draw a subtle starfield gradient
             const gradient = starsCtx.createRadialGradient(
                 starsCanvas.width/2, starsCanvas.height/2, 0,
-                starsCanvas.width/2, starsCanvas.height/2, Math.max(starsCanvas.width, starsCanvas.height)/1.5
+                starsCanvas.width/2, starsCanvas.height/2, Math.max(starsCanvas.width, starsCanvas.height)
             );
-            gradient.addColorStop(0, 'rgba(100, 100, 180, 0.3)');
-            gradient.addColorStop(1, 'rgba(10, 10, 30, 0.9)');
+            gradient.addColorStop(0, 'rgba(80, 80, 150, 0.1)');
+            gradient.addColorStop(1, 'rgba(10, 10, 30, 0.8)');
             starsCtx.fillStyle = gradient;
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
-            // Draw a subtle grid of dim stars for depth
-            starsCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            // Draw a subtle grid of dim stars for depth (less visible)
+            starsCtx.fillStyle = 'rgba(255, 255, 255, 0.02)';
             const gridSize = 40;
             for (let x = 0; x < starsCanvas.width; x += gridSize) {
                 for (let y = 0; y < starsCanvas.height; y += gridSize) {
@@ -354,26 +354,25 @@
             }
             
             stars.forEach(star => {
-                // Make stars twinkle with more variation
-                const twinkle = 0.8 + Math.random() * 0.2; // Brighter twinkle (0.8-1.0)
+                // Make stars twinkle subtly
+                const twinkle = 0.7 + Math.random() * 0.3; // Subtle twinkle (0.7-1.0)
                 const starAlpha = star.alpha * twinkle;
                 
-                // Draw star glow (larger and brighter)
+                // Draw subtle star glow
                 const gradient = starsCtx.createRadialGradient(
                     star.x, star.y, 0,
-                    star.x, star.y, star.size * (star.glow * 1.2)
+                    star.x, star.y, star.size * 2
                 );
-                gradient.addColorStop(0, `rgba(255, 245, 220, ${starAlpha * 0.8})`);
-                gradient.addColorStop(0.7, `rgba(255, 220, 150, ${starAlpha * 0.4})`);
-                gradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${starAlpha * 0.5})`);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
                 
                 starsCtx.fillStyle = gradient;
                 starsCtx.beginPath();
-                starsCtx.arc(star.x, star.y, star.size * (star.glow * 1.2), 0, Math.PI * 2);
+                starsCtx.arc(star.x, star.y, star.size * 2, 0, Math.PI * 2);
                 starsCtx.fill();
                 
-                // Draw star core (brighter and larger)
-                starsCtx.fillStyle = `rgba(255, 250, 230, ${starAlpha})`;
+                // Draw star core
+                starsCtx.fillStyle = `rgba(255, 255, 255, ${starAlpha})`;
                 
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
@@ -381,12 +380,12 @@
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < -30) {  // Reset stars earlier
-                    star.x = starsCanvas.width + 30;
+                if (star.x < -20) {  // Reset stars when off screen
+                    star.x = starsCanvas.width + 20;
                     star.y = Math.random() * starsCanvas.height;
-                    star.size = 2 + Math.random() * 3; // Slightly larger stars (2-5px)
-                    star.alpha = 0.9 + Math.random() * 0.1; // Keep stars very bright
-                    star.glow = 2 + Math.random() * 3; // Larger glow
+                    star.size = 0.5 + Math.random() * 1; // Keep stars small (0.5-1.5px)
+                    star.alpha = 0.3 + Math.random() * 0.4; // Keep stars subtle
+                    star.glow = 0.5 + Math.random() * 1; // Small glow
                 }
             });
             
