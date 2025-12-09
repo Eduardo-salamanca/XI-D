@@ -604,41 +604,33 @@
         // Draw outer glow
         cometsCtx.fillStyle = headGradient;
         cometsCtx.beginPath();
+        // Draw comet head glow
+        const headGradient = cometsCtx.createRadialGradient(
+            comet.x, comet.y, 0,
+            comet.x, comet.y, comet.size * 4
+        );
+        headGradient.addColorStop(0, `rgba(255, 255, 255, ${comet.alpha})`);
+        headGradient.addColorStop(0.4, `rgba(255, 240, 150, ${comet.alpha * 0.8})`);
+        headGradient.addColorStop(0.7, `rgba(255, 200, 50, ${comet.alpha * 0.5})`);
+        headGradient.addColorStop(1, 'rgba(255, 180, 0, 0)');
+        
+        // Draw outer glow
+        cometsCtx.fillStyle = headGradient;
+        cometsCtx.beginPath();
         cometsCtx.arc(comet.x, comet.y, comet.size * 4, 0, Math.PI * 2);
         cometsCtx.fill();
-                
-        // Draw inner bright core
+        
+        // Draw inner core
         const coreGradient = cometsCtx.createRadialGradient(
             comet.x, comet.y, 0,
             comet.x, comet.y, comet.size * 2
         );
         coreGradient.addColorStop(0, `rgba(255, 255, 255, ${comet.alpha})`);
         coreGradient.addColorStop(1, `rgba(255, 220, 100, ${comet.alpha * 0.5})`);
-                
+        
         cometsCtx.fillStyle = coreGradient;
         cometsCtx.beginPath();
         cometsCtx.arc(comet.x, comet.y, comet.size * 1.5, 0, Math.PI * 2);
-        cometsCtx.fill();
-                
-        // Draw brightest center
-        cometsCtx.fillStyle = `rgba(255, 255, 255, ${comet.alpha})`;
-        cometsCtx.beginPath();
-        cometsCtx.arc(comet.x, comet.y, comet.size * 0.8, 0, Math.PI * 2);
-        cometsCtx.fill();
-                
-        
-        // Initial setup
-        resizeCanvas();
-        initStars();
-        drawStars();
-        
-        // Start the animation loop
-        drawComets();
-        
-        // Create initial comets with delay
-        setTimeout(() => {
-            createComet(); // Create first comet after a short delay
-            
             // Function to create next comet
             const createNextComet = () => {
                 if (comets.length < 2) { // Only 1-2 comets at a time
