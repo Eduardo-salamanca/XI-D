@@ -330,19 +330,26 @@
         
         // Draw stars
         function drawStars() {
-            starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
-            starsCtx.fillStyle = '#ffd700';
+            // Don't clear the entire canvas to maintain star trails
+            // Instead, draw a semi-transparent black overlay for fade effect
+            starsCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
             stars.forEach(star => {
+                // Make stars twinkle slightly
+                const twinkle = Math.random() * 0.5 + 0.5; // Random brightness between 0.5 and 1.0
+                starsCtx.fillStyle = `rgba(255, 215, 0, ${twinkle})`;
+                
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
                 starsCtx.fill();
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < 0) {
-                    star.x = starsCanvas.width;
+                if (star.x < -5) {  // Slightly off-screen before resetting
+                    star.x = starsCanvas.width + 5;
                     star.y = Math.random() * starsCanvas.height;
+                    star.size = Math.random() * 2; // Randomize size on reset
                 }
             });
             
@@ -401,8 +408,9 @@
         function drawComets() {
             const now = Date.now();
             
-            // Clear with semi-transparent black for trail effect
-            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Lighter trail effect
+            // Clear with more transparent black for trail effect
+            // This makes the comet trails more visible against the stars
+            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.02)';
             cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
             
             for (let i = comets.length - 1; i >= 0; i--) {
