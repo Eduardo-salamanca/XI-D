@@ -322,23 +322,31 @@
                 stars.push({
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
-                    size: Math.random() * 2, // Slightly larger stars
-                    speed: Math.random() * 0.5
+                    size: 1 + Math.random() * 2, // Larger stars (1-3px)
+                    speed: 0.3 + Math.random() * 0.5, // Slightly slower movement
+                    alpha: 0.5 + Math.random() * 0.5 // Random initial brightness
                 });
             }
         }
         
         // Draw stars
         function drawStars() {
-            // Don't clear the entire canvas to maintain star trails
-            // Instead, draw a semi-transparent black overlay for fade effect
-            starsCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            // Clear with a very dark blue instead of black for better star visibility
+            starsCtx.fillStyle = '#03051a';
+            starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
+            
+            // Draw a subtle gradient overlay for depth
+            const gradient = starsCtx.createLinearGradient(0, 0, 0, starsCanvas.height);
+            gradient.addColorStop(0, 'rgba(50, 50, 100, 0.4)');
+            gradient.addColorStop(1, 'rgba(10, 10, 30, 0.2)');
+            starsCtx.fillStyle = gradient;
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
             stars.forEach(star => {
-                // Make stars twinkle slightly
-                const twinkle = Math.random() * 0.5 + 0.5; // Random brightness between 0.5 and 1.0
-                starsCtx.fillStyle = `rgba(255, 215, 0, ${twinkle})`;
+                // Make stars twinkle with more variation
+                const twinkle = 0.6 + Math.random() * 0.4; // Brighter twinkle (0.6-1.0)
+                const starAlpha = star.alpha * twinkle;
+                starsCtx.fillStyle = `rgba(255, 240, 200, ${starAlpha})`; // Warmer, brighter star color
                 
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
@@ -346,10 +354,11 @@
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < -5) {  // Slightly off-screen before resetting
-                    star.x = starsCanvas.width + 5;
+                if (star.x < -10) {  // Reset stars slightly earlier
+                    star.x = starsCanvas.width + 10;
                     star.y = Math.random() * starsCanvas.height;
-                    star.size = Math.random() * 2; // Randomize size on reset
+                    star.size = 1 + Math.random() * 2; // Keep stars in 1-3px range
+                    star.alpha = 0.5 + Math.random() * 0.5; // Randomize brightness on reset
                 }
             });
             
@@ -400,7 +409,7 @@
                 alpha: 1,
                 tail: [],
                 time: Date.now(),
-                maxTailLength: 25 + Math.random() * 25, // Longer tails
+                maxTailLength: 30 + Math.random() * 30, // Even longer tails
                 curve: (Math.random() - 0.5) * 0.05
             });
         }
@@ -408,9 +417,8 @@
         function drawComets() {
             const now = Date.now();
             
-            // Clear with more transparent black for trail effect
-            // This makes the comet trails more visible against the stars
-            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+            // Use a very subtle clear to maintain comet trails longer
+            cometsCtx.fillStyle = 'rgba(5, 5, 15, 0.08)'; // Dark blue tint for better space feel
             cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
             
             for (let i = comets.length - 1; i >= 0; i--) {
@@ -520,8 +528,9 @@
                 cometsCtx.arc(comet.x, comet.y, comet.size * 0.8, 0, Math.PI * 2);
                 cometsCtx.fill();
                 
-                // Update alpha based on age
-                comet.alpha = 1 - (age / COMET_LIFETIME);
+                // Update alpha based on age with a smoother fade
+                const lifeProgress = age / COMET_LIFETIME;
+                comet.alpha = 1 - Math.pow(lifeProgress, 0.5); // Slower fade at the end
             }
             
             requestAnimationFrame(drawComets);
