@@ -227,7 +227,6 @@
 </head>
 <body class="main-page">
     <canvas id="starsCanvas"></canvas>
-    <canvas id="cometsCanvas"></canvas>
     <div class="grid-overlay"></div>
     
     <div class="container">
@@ -298,23 +297,19 @@
     </div>
     
     <script>
-        // Get canvas elements and contexts
+        // Get canvas element and context
         const starsCanvas = document.getElementById('starsCanvas');
         const starsCtx = starsCanvas.getContext('2d');
-        const cometsCanvas = document.getElementById('cometsCanvas');
-        const cometsCtx = cometsCanvas.getContext('2d');
         
         // Set canvas size
         function resizeCanvas() {
             starsCanvas.width = window.innerWidth;
             starsCanvas.height = window.innerHeight;
-            cometsCanvas.width = window.innerWidth;
-            cometsCanvas.height = window.innerHeight;
         }
         
         // Initialize stars
         let stars = [];
-        const starCount = 400; // Increased number of stars
+        const starCount = 500; // Increased number of stars
         
         function initStars() {
             stars = [];
@@ -323,50 +318,62 @@
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
                     size: 1.5 + Math.random() * 2.5, // Larger stars (1.5-4px)
-                    speed: 0.2 + Math.random() * 0.4, // Slower movement
-                    alpha: 0.8 + Math.random() * 0.2, // Brighter stars (0.8-1.0)
-                    glow: 1 + Math.random() * 2 // Random glow size
+                    speed: 0.1 + Math.random() * 0.3, // Slower movement
+                    alpha: 0.9 + Math.random() * 0.1, // Very bright stars (0.9-1.0)
+                    glow: 1.5 + Math.random() * 2.5, // Larger glow
+                    baseAlpha: 0.8 + Math.random() * 0.2 // Base brightness for twinkling
                 });
             }
         }
         
         // Draw stars
         function drawStars() {
-            // Clear with a dark blue background
-            starsCtx.fillStyle = '#0a0a1a';
+            // Clear with a very dark blue background
+            starsCtx.fillStyle = '#050510';
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
             // Draw a subtle starfield gradient
             const gradient = starsCtx.createRadialGradient(
                 starsCanvas.width/2, starsCanvas.height/2, 0,
-                starsCanvas.width/2, starsCanvas.height/2, Math.max(starsCanvas.width, starsCanvas.height)/2
+                starsCanvas.width/2, starsCanvas.height/2, Math.max(starsCanvas.width, starsCanvas.height)/1.5
             );
-            gradient.addColorStop(0, 'rgba(80, 80, 150, 0.2)');
-            gradient.addColorStop(1, 'rgba(20, 20, 50, 0.8)');
+            gradient.addColorStop(0, 'rgba(100, 100, 180, 0.3)');
+            gradient.addColorStop(1, 'rgba(10, 10, 30, 0.9)');
             starsCtx.fillStyle = gradient;
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
+            // Draw a subtle grid of dim stars for depth
+            starsCtx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            const gridSize = 40;
+            for (let x = 0; x < starsCanvas.width; x += gridSize) {
+                for (let y = 0; y < starsCanvas.height; y += gridSize) {
+                    if (Math.random() > 0.8) {
+                        starsCtx.fillRect(x, y, 1, 1);
+                    }
+                }
+            }
+            
             stars.forEach(star => {
                 // Make stars twinkle with more variation
-                const twinkle = 0.7 + Math.random() * 0.3; // Brighter twinkle (0.7-1.0)
+                const twinkle = 0.8 + Math.random() * 0.2; // Brighter twinkle (0.8-1.0)
                 const starAlpha = star.alpha * twinkle;
                 
-                // Draw star glow
+                // Draw star glow (larger and brighter)
                 const gradient = starsCtx.createRadialGradient(
                     star.x, star.y, 0,
-                    star.x, star.y, star.size * star.glow
+                    star.x, star.y, star.size * (star.glow * 1.2)
                 );
-                gradient.addColorStop(0, `rgba(255, 240, 220, ${starAlpha * 0.6})`);
-                gradient.addColorStop(0.5, `rgba(255, 220, 150, ${starAlpha * 0.3})`);
+                gradient.addColorStop(0, `rgba(255, 245, 220, ${starAlpha * 0.8})`);
+                gradient.addColorStop(0.7, `rgba(255, 220, 150, ${starAlpha * 0.4})`);
                 gradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
                 
                 starsCtx.fillStyle = gradient;
                 starsCtx.beginPath();
-                starsCtx.arc(star.x, star.y, star.size * star.glow, 0, Math.PI * 2);
+                starsCtx.arc(star.x, star.y, star.size * (star.glow * 1.2), 0, Math.PI * 2);
                 starsCtx.fill();
                 
-                // Draw star core
-                starsCtx.fillStyle = `rgba(255, 245, 220, ${starAlpha})`;
+                // Draw star core (brighter and larger)
+                starsCtx.fillStyle = `rgba(255, 250, 230, ${starAlpha})`;
                 
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
@@ -374,149 +381,19 @@
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < -20) {  // Reset stars earlier
-                    star.x = starsCanvas.width + 20;
+                if (star.x < -30) {  // Reset stars earlier
+                    star.x = starsCanvas.width + 30;
                     star.y = Math.random() * starsCanvas.height;
-                    star.size = 1.5 + Math.random() * 2.5; // Keep stars in 1.5-4px range
-                    star.alpha = 0.8 + Math.random() * 0.2; // Keep stars bright
-                    star.glow = 1 + Math.random() * 2; // Random glow size
+                    star.size = 2 + Math.random() * 3; // Slightly larger stars (2-5px)
+                    star.alpha = 0.9 + Math.random() * 0.1; // Keep stars very bright
+                    star.glow = 2 + Math.random() * 3; // Larger glow
                 }
             });
             
             requestAnimationFrame(drawStars);
         }
         
-        // Simple comet-like stars (no trails)
-        let comets = [];
-        const COMET_LIFETIME = 3000; // 3 seconds
-        
-        function createComet() {
-            // Randomly select which edge to start from (0: top, 1: right, 2: bottom, 3: left)
-            const edge = Math.floor(Math.random() * 4);
-            let startX, startY;
-            
-            // Set starting position based on selected edge
-            switch(edge) {
-                case 0: // Top
-                    startX = Math.random() * cometsCanvas.width;
-                    startY = -20;
-                    break;
-                case 1: // Right
-                    startX = cometsCanvas.width + 20;
-                    startY = Math.random() * cometsCanvas.height;
-                    break;
-                case 2: // Bottom
-                    startX = Math.random() * cometsCanvas.width;
-                    startY = cometsCanvas.height + 20;
-                    break;
-                case 3: // Left
-                    startX = -20;
-                    startY = Math.random() * cometsCanvas.height;
-                    break;
-            }
-            
-            // Calculate direction (40 degrees downward to the right)
-            const angle = 40 * (Math.PI / 180);
-            const speed = 8 + Math.random() * 4;
-            const vx = Math.cos(angle) * speed;
-            const vy = Math.sin(angle) * speed;
-            
-            comets.push({
-                x: startX,
-                y: startY,
-                vx: vx,
-                vy: vy,
-                size: 2.5 + Math.random() * 2, // Larger comets
-                alpha: 1,
-                tail: [],
-                time: Date.now(),
-                maxTailLength: 30 + Math.random() * 30, // Even longer tails
-                curve: (Math.random() - 0.5) * 0.05
-            });
-        }
-        
-        function drawComets() {
-            const now = Date.now();
-            
-            // Clear with a very subtle dark overlay
-            cometsCtx.fillStyle = 'rgba(10, 10, 30, 0.05)';
-            cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
-            
-            for (let i = comets.length - 1; i >= 0; i--) {
-                const comet = comets[i];
-                const age = now - comet.time;
-                
-                // Remove old comets
-                if (age > COMET_LIFETIME || 
-                    comet.x < -100 || 
-                    comet.x > cometsCanvas.width + 100 || 
-                    comet.y < -100 || 
-                    comet.y > cometsCanvas.height + 100) {
-                    comets.splice(i, 1);
-                    continue;
-                }
-                
-                // Update position with slight curve
-                comet.x += comet.vx;
-                comet.y += comet.vy;
-                comet.vx += comet.curve;
-                
-                // Simple glow effect instead of tail
-                const gradient = cometsCtx.createRadialGradient(
-                    comet.x, comet.y, 0,
-                    comet.x, comet.y, comet.size * 3
-                );
-                gradient.addColorStop(0, `rgba(255, 240, 200, ${comet.alpha * 0.7})`);
-                gradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
-                
-                cometsCtx.fillStyle = gradient;
-                cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 3, 0, Math.PI * 2);
-                cometsCtx.fill();
-                
-                // Draw comet head glow
-                const headGradient = cometsCtx.createRadialGradient(
-                    comet.x, comet.y, 0,
-                    comet.x, comet.y, comet.size * 4
-                );
-                headGradient.addColorStop(0, `rgba(255, 255, 255, ${comet.alpha})`);
-                headGradient.addColorStop(0.4, `rgba(255, 240, 150, ${comet.alpha * 0.8})`);
-                headGradient.addColorStop(0.7, `rgba(255, 200, 50, ${comet.alpha * 0.5})`);
-                headGradient.addColorStop(1, 'rgba(255, 180, 0, 0)');
-                
-                // Draw outer glow
-                cometsCtx.fillStyle = headGradient;
-                cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 4, 0, Math.PI * 2);
-                cometsCtx.fill();
-                
-                // Draw inner core
-                const coreGradient = cometsCtx.createRadialGradient(
-                    comet.x, comet.y, 0,
-                    comet.x, comet.y, comet.size * 2
-                );
-                coreGradient.addColorStop(0, `rgba(255, 255, 255, ${comet.alpha})`);
-                coreGradient.addColorStop(1, `rgba(255, 220, 100, ${comet.alpha * 0.5})`);
-                
-                cometsCtx.fillStyle = coreGradient;
-                cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 1.5, 0, Math.PI * 2);
-                cometsCtx.fill();
-                
-                // Draw brightest center
-                cometsCtx.fillStyle = `rgba(255, 255, 255, ${comet.alpha})`;
-                cometsCtx.beginPath();
-                cometsCtx.arc(comet.x, comet.y, comet.size * 0.8, 0, Math.PI * 2);
-                cometsCtx.fill();
-                
-                // Update alpha based on age with a smoother fade
-                const lifeProgress = age / COMET_LIFETIME;
-                comet.alpha = 1 - Math.pow(lifeProgress, 0.5); // Slower fade at the end
-            }
-            
-            requestAnimationFrame(drawComets);
-        }
-        
+        // Removed comets as requested
         // Initialize
         window.addEventListener('resize', () => {
             resizeCanvas();
@@ -527,26 +404,8 @@
         resizeCanvas();
         initStars();
         
-        // Start the animation loops
+        // Start the star animation
         drawStars();
-        drawComets();
-        
-        // Create initial comets with delay
-        setTimeout(() => {
-            createComet(); // Create first comet after a short delay
-            
-            // Function to create next comet
-            const createNextComet = () => {
-                if (comets.length < 2) { // Only 1-2 comets at a time
-                    createComet();
-                }
-                // Random interval between 3-8 seconds
-                setTimeout(createNextComet, 3000 + Math.random() * 5000);
-            };
-            
-            // Start the sequence
-            setTimeout(createNextComet, 2000);
-        }, 1500);
 </script>
 </body>
 </html>
