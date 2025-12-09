@@ -322,31 +322,51 @@
                 stars.push({
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
-                    size: 1 + Math.random() * 2, // Larger stars (1-3px)
-                    speed: 0.3 + Math.random() * 0.5, // Slightly slower movement
-                    alpha: 0.5 + Math.random() * 0.5 // Random initial brightness
+                    size: 1.5 + Math.random() * 2.5, // Larger stars (1.5-4px)
+                    speed: 0.2 + Math.random() * 0.4, // Slower movement
+                    alpha: 0.8 + Math.random() * 0.2, // Brighter stars (0.8-1.0)
+                    glow: 1 + Math.random() * 2 // Random glow size
                 });
             }
         }
         
         // Draw stars
         function drawStars() {
-            // Clear with a very dark blue instead of black for better star visibility
-            starsCtx.fillStyle = '#03051a';
+            // Clear with a dark blue background
+            starsCtx.fillStyle = '#0a0a1a';
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
-            // Draw a subtle gradient overlay for depth
-            const gradient = starsCtx.createLinearGradient(0, 0, 0, starsCanvas.height);
-            gradient.addColorStop(0, 'rgba(50, 50, 100, 0.4)');
-            gradient.addColorStop(1, 'rgba(10, 10, 30, 0.2)');
+            // Draw a subtle starfield gradient
+            const gradient = starsCtx.createRadialGradient(
+                starsCanvas.width/2, starsCanvas.height/2, 0,
+                starsCanvas.width/2, starsCanvas.height/2, Math.max(starsCanvas.width, starsCanvas.height)/2
+            );
+            gradient.addColorStop(0, 'rgba(80, 80, 150, 0.2)');
+            gradient.addColorStop(1, 'rgba(20, 20, 50, 0.8)');
             starsCtx.fillStyle = gradient;
             starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
             
             stars.forEach(star => {
                 // Make stars twinkle with more variation
-                const twinkle = 0.6 + Math.random() * 0.4; // Brighter twinkle (0.6-1.0)
+                const twinkle = 0.7 + Math.random() * 0.3; // Brighter twinkle (0.7-1.0)
                 const starAlpha = star.alpha * twinkle;
-                starsCtx.fillStyle = `rgba(255, 240, 200, ${starAlpha})`; // Warmer, brighter star color
+                
+                // Draw star glow
+                const gradient = starsCtx.createRadialGradient(
+                    star.x, star.y, 0,
+                    star.x, star.y, star.size * star.glow
+                );
+                gradient.addColorStop(0, `rgba(255, 240, 220, ${starAlpha * 0.6})`);
+                gradient.addColorStop(0.5, `rgba(255, 220, 150, ${starAlpha * 0.3})`);
+                gradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
+                
+                starsCtx.fillStyle = gradient;
+                starsCtx.beginPath();
+                starsCtx.arc(star.x, star.y, star.size * star.glow, 0, Math.PI * 2);
+                starsCtx.fill();
+                
+                // Draw star core
+                starsCtx.fillStyle = `rgba(255, 245, 220, ${starAlpha})`;
                 
                 starsCtx.beginPath();
                 starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
@@ -354,20 +374,21 @@
                 
                 // Move stars
                 star.x -= star.speed;
-                if (star.x < -10) {  // Reset stars slightly earlier
-                    star.x = starsCanvas.width + 10;
+                if (star.x < -20) {  // Reset stars earlier
+                    star.x = starsCanvas.width + 20;
                     star.y = Math.random() * starsCanvas.height;
-                    star.size = 1 + Math.random() * 2; // Keep stars in 1-3px range
-                    star.alpha = 0.5 + Math.random() * 0.5; // Randomize brightness on reset
+                    star.size = 1.5 + Math.random() * 2.5; // Keep stars in 1.5-4px range
+                    star.alpha = 0.8 + Math.random() * 0.2; // Keep stars bright
+                    star.glow = 1 + Math.random() * 2; // Random glow size
                 }
             });
             
             requestAnimationFrame(drawStars);
         }
         
-        // Comets
+        // Simple comet-like stars (no trails)
         let comets = [];
-        const COMET_LIFETIME = 4000; // 4 seconds (slightly longer visible time)
+        const COMET_LIFETIME = 3000; // 3 seconds
         
         function createComet() {
             // Randomly select which edge to start from (0: top, 1: right, 2: bottom, 3: left)
@@ -417,8 +438,8 @@
         function drawComets() {
             const now = Date.now();
             
-            // Use a very subtle clear to maintain comet trails longer
-            cometsCtx.fillStyle = 'rgba(5, 5, 15, 0.08)'; // Dark blue tint for better space feel
+            // Clear with a very subtle dark overlay
+            cometsCtx.fillStyle = 'rgba(10, 10, 30, 0.05)';
             cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
             
             for (let i = comets.length - 1; i >= 0; i--) {
@@ -440,58 +461,18 @@
                 comet.y += comet.vy;
                 comet.vx += comet.curve;
                 
-                // Add current position to tail
-                comet.tail.push({
-                    x: comet.x,
-                    y: comet.y,
-                    time: now
-                });
+                // Simple glow effect instead of tail
+                const gradient = cometsCtx.createRadialGradient(
+                    comet.x, comet.y, 0,
+                    comet.x, comet.y, comet.size * 3
+                );
+                gradient.addColorStop(0, `rgba(255, 240, 200, ${comet.alpha * 0.7})`);
+                gradient.addColorStop(1, 'rgba(255, 200, 100, 0)');
                 
-                // Remove old tail points
-                while (comet.tail.length > 0 && now - comet.tail[0].time > 1000) {
-                    comet.tail.shift();
-                }
-                
-                // Draw tail if there are enough points
-                if (comet.tail.length > 1) {
-                    const gradient = cometsCtx.createLinearGradient(
-                        comet.tail[0].x, comet.tail[0].y,
-                        comet.tail[comet.tail.length - 1].x, 
-                        comet.tail[comet.tail.length - 1].y
-                    );
-                    
-                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-                    gradient.addColorStop(0.1, `rgba(255, 255, 255, ${comet.alpha * 0.7})`);
-                    gradient.addColorStop(0.5, `rgba(255, 230, 100, ${comet.alpha * 0.9})`);
-                    gradient.addColorStop(1, `rgba(255, 180, 0, ${comet.alpha * 0.6})`);
-                    
-                    cometsCtx.strokeStyle = gradient;
-                    cometsCtx.lineWidth = comet.size * 1.5;
-                    cometsCtx.lineCap = 'round';
-                    cometsCtx.lineJoin = 'round';
-                    
-                    // Draw smooth curve through tail points
-                    cometsCtx.beginPath();
-                    cometsCtx.moveTo(comet.tail[0].x, comet.tail[0].y);
-                    
-                    for (let j = 1; j < comet.tail.length - 1; j++) {
-                        const xc = (comet.tail[j].x + comet.tail[j + 1].x) / 2;
-                        const yc = (comet.tail[j].y + comet.tail[j + 1].y) / 2;
-                        cometsCtx.quadraticCurveTo(comet.tail[j].x, comet.tail[j].y, xc, yc);
-                    }
-                    
-                    if (comet.tail.length > 1) {
-                        const last = comet.tail.length - 1;
-                        cometsCtx.quadraticCurveTo(
-                            comet.tail[last].x, 
-                            comet.tail[last].y,
-                            comet.tail[last].x, 
-                            comet.tail[last].y
-                        );
-                    }
-                    
-                    cometsCtx.stroke();
-                }
+                cometsCtx.fillStyle = gradient;
+                cometsCtx.beginPath();
+                cometsCtx.arc(comet.x, comet.y, comet.size * 3, 0, Math.PI * 2);
+                cometsCtx.fill();
                 
                 // Draw comet head glow
                 const headGradient = cometsCtx.createRadialGradient(
