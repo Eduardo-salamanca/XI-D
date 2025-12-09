@@ -314,7 +314,7 @@
         
         // Initialize stars
         let stars = [];
-        const starCount = 200;
+        const starCount = 400; // Increased number of stars
         
         function initStars() {
             stars = [];
@@ -322,7 +322,7 @@
                 stars.push({
                     x: Math.random() * starsCanvas.width,
                     y: Math.random() * starsCanvas.height,
-                    size: Math.random() * 1.5,
+                    size: Math.random() * 2, // Slightly larger stars
                     speed: Math.random() * 0.5
                 });
             }
@@ -351,7 +351,7 @@
         
         // Comets
         let comets = [];
-        const COMET_LIFETIME = 3000; // 3 seconds
+        const COMET_LIFETIME = 4000; // 4 seconds (slightly longer visible time)
         
         function createComet() {
             // Randomly select which edge to start from (0: top, 1: right, 2: bottom, 3: left)
@@ -389,11 +389,11 @@
                 y: startY,
                 vx: vx,
                 vy: vy,
-                size: 1.2 + Math.random() * 1.2,
+                size: 2.5 + Math.random() * 2, // Larger comets
                 alpha: 1,
                 tail: [],
                 time: Date.now(),
-                maxTailLength: 15 + Math.random() * 15,
+                maxTailLength: 25 + Math.random() * 25, // Longer tails
                 curve: (Math.random() - 0.5) * 0.05
             });
         }
@@ -402,7 +402,7 @@
             const now = Date.now();
             
             // Clear with semi-transparent black for trail effect
-            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            cometsCtx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Lighter trail effect
             cometsCtx.fillRect(0, 0, cometsCanvas.width, cometsCanvas.height);
             
             for (let i = comets.length - 1; i >= 0; i--) {
