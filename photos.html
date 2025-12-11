@@ -4,147 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Memory - XI-D</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Reset and Base Styles */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-        }
-        
+        /* Critical styles - ensures design works even if CSS file doesn't load */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Courier New', monospace;
-            background: #000;
-            color: #ffd700;
-            display: flex;
-            flex-direction: column;
+            background: #000 !important;
+            color: #ffd700 !important;
+            overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
-        
-        /* Starry Background Animation */
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .starry-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .stars::before, .stars::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at center, 
-                    rgba(255, 255, 255, 0.5) 0%,
-                    rgba(255, 255, 255, 0.1) 40%,
-                    rgba(0, 0, 0, 0) 70%
-                );
-            animation: twinkle 8s infinite;
-        }
-
-        .stars::after {
-            animation-delay: 4s;
-            opacity: 0.5;
-        }
-
-        /* Main Content Container */
         .photos-page {
-            flex: 1;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .photos-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: clamp(1rem, 3vw, 2rem);
             display: flex;
             flex-direction: column;
-            min-height: 100%;
-            position: relative;
-            z-index: 1;
-            padding-bottom: 2rem;
+            align-items: center;
         }
-
-        .photos-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            flex: 1;
-        }
-
-        /* Header Styles */
         .page-header {
             text-align: center;
-            margin: 0 auto 2rem;
-            padding: 1.5rem;
-            border: 3px solid #ffd700;
+            margin-bottom: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1.2rem, 3vw, 2rem);
+            border: 3px solid #ffd700 !important;
             border-radius: 25px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.05) !important;
             backdrop-filter: blur(3px);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), 
-                       inset 0 0 40px rgba(255, 215, 0, 0.03);
-            max-width: 800px;
-            width: 95%;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
+            width: 100%;
+            max-width: 1200px;
         }
-
         .page-title {
-            font-size: clamp(1.3rem, 5vw, 2.5rem);
+            font-size: clamp(1.3rem, 5vw, 3rem);
             text-transform: uppercase;
             letter-spacing: 0.3em;
-            color: #ffd700;
-            text-shadow: 0 0 10px #ffd700,
-                        0 0 20px rgba(255, 215, 0, 0.5);
+            color: #ffd700 !important;
+            text-shadow:
+                0 0 10px #ffd700,
+                0 0 20px rgba(255, 215, 0, 0.5);
             margin-bottom: 1rem;
         }
 
-        /* Gallery Wrapper */
-        .gallery-wrapper {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 60px;
-            width: 100%;
+        /* MOBILE: tighter padding + higher photo position */
+        @media (max-width: 768px) {
+            .photos-container { padding: 0.5rem; }
+            .page-header {
+                padding: 1rem 0.75rem;
+                margin: 1rem auto 1.2rem;
+                width: 95%;
+            }
+            .page-title {
+                font-size: 1.5rem;
+                letter-spacing: 0.18em;
+                margin-bottom: 0.6rem;
+            }
+            .back-link {
+                padding: 0.55rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            .photo-gallery {
+                width: 95%;
+                margin: 0.4rem auto;
+            }
+            .photo-slider {
+                height: 65vh;          /* a bit shorter to lift the image */
+                min-height: 300px;
+                max-height: 520px;
+                padding: 0;
+                margin: 0.2rem auto 0.6rem;
+                align-items: center;   /* keep items vertically centered */
+            }
+            .photo-item { padding: 10px; }
+            .photo-item img { max-height: 90%; max-width: 100%; }
+            .photo-controls { padding: 0 6px; }
+            .photo-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1.1rem;
+            }
+            .photo-indicators { bottom: 10px; }
+            .indicator { width: 10px; height: 10px; }
         }
 
-        /* Photo Slider */
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            color: #ffd700 !important;
+            text-decoration: none;
+            border: 2px solid #ffd700 !important;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .back-link:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
+            transform: translateY(-3px);
+            border-color: #ffed4e !important;
+            background: rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .photo-gallery {
+            width: 90%;
+            max-width: 500px;
+            margin: 1rem auto;
+            position: relative;
+            perspective: 1000px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
         .photo-slider {
             position: relative;
             width: 100%;
             height: 70vh;
+            max-height: 800px;
             min-height: 400px;
-            max-height: 70vh;
             overflow: hidden;
             border-radius: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
             margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* vertical centering */
         }
 
+        /* Center items vertically and animate horizontally */
         .photo-item {
             position: absolute;
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: all 0.8s ease-in-out;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
             transform: translate(-50%, -50%) translateX(100%);
             top: 50%;
             left: 50%;
@@ -153,19 +161,23 @@
             align-items: center;
             padding: 20px;
             box-sizing: border-box;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+        
+        .no-transition .photo-item {
+            transition: none !important;
         }
 
         .photo-item.active {
             opacity: 1;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) translateX(0);
             z-index: 10;
         }
-
         .photo-item.prev {
             transform: translate(-50%, -50%) translateX(-100%);
             z-index: 5;
         }
-
         .photo-item.next {
             transform: translate(-50%, -50%) translateX(100%);
             z-index: 5;
@@ -179,34 +191,25 @@
             object-fit: contain;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
+            display: block;
+            margin: 0 auto;
         }
+        .photo-item img:hover { transform: scale(1.02); }
 
-        .photo-item.active img {
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-        }
-
-        .photo-item img:hover { 
-            transform: scale(1.02); 
-        }
-
-        /* Navigation Controls */
         .photo-controls {
             position: absolute;
             top: 50%;
             left: 0;
             right: 0;
-            transform: translateY(-50%);
             display: flex;
             justify-content: space-between;
-            pointer-events: none;
+            padding: 0 20px;
             z-index: 20;
-            padding: 0 10px;
+            transform: translateY(-50%);
         }
-
         .photo-btn {
-            pointer-events: auto;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             color: #ffd700;
             border: 2px solid #ffd700;
             width: 50px;
@@ -219,15 +222,10 @@
             justify-content: center;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
-            z-index: 30;
-            padding: 0;
-            margin: 0;
         }
-
         .photo-btn:hover {
-            background: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.2);
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         .photo-indicators {
@@ -239,151 +237,32 @@
             justify-content: center;
             gap: 10px;
             z-index: 20;
-            padding: 10px;
-            pointer-events: none;
         }
-
         .indicator {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
-            pointer-events: auto;
         }
-
         .indicator.active {
             background: #ffd700;
             transform: scale(1.2);
             border-color: #fff;
-            box-shadow: 0 0 10px #ffd700;
-        }
-
-        /* Back Link Styles */
-        .back-link {
-            display: inline-block;
-            margin-top: 1.5rem;
-            padding: 0.8rem 2rem;
-            color: #ffd700;
-            text-decoration: none;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.9rem;
-        }
-
-        .back-link:hover {
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), 
-                       inset 0 0 15px rgba(255, 215, 0, 0.1);
-            transform: translateY(-3px);
-            border-color: #ffed4e;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 992px) {
-            .gallery-wrapper {
-                padding: 0 50px;
-            }
-            
-            .photo-slider {
-                height: 60vh;
-                min-height: 350px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .photos-container {
-                padding: 1rem 0.5rem;
-            }
-            
-            .page-header {
-                padding: 1rem;
-                margin: 0 auto 1.5rem;
-                width: 95%;
-            }
-            
-            .page-title {
-                font-size: 1.5rem;
-                letter-spacing: 0.2em;
-                margin-bottom: 0.8rem;
-            }
-            
-            .gallery-wrapper {
-                padding: 0 15px;
-                width: 100%;
-            }
-            
-            .photo-slider {
-                height: 50vh;
-                min-height: 300px;
-            }
-            
-            .photo-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-            
-            .back-link {
-                padding: 0.7rem 1.5rem;
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .gallery-wrapper {
-                padding: 0 10px;
-            }
-            
-            .photo-slider {
-                height: 45vh;
-                min-height: 250px;
-            }
-            
-            .photo-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-            }
-            
-            .indicator {
-                width: 10px;
-                height: 10px;
-            }
-            
-            .page-header {
-                padding: 0.8rem;
-            }
-            
-            .page-title {
-                font-size: 1.2rem;
-                letter-spacing: 0.1em;
-            }
         }
     </style>
 </head>
 <body class="photos-page">
-    <!-- Starry Background -->
-    <div class="starry-bg">
-        <div class="stars"></div>
-    </div>
+    <div class="photos-container">
+        <div class="page-header">
+            <h1 class="page-title">Photo Memory</h1>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
 
-    <div class="photos-page">
-        <div class="photos-container">
-            <header class="page-header">
-                <h1 class="page-title">Photo Memory</h1>
-                <a href="index.html" class="back-link">← Back to Home</a>
-            </header>
-
-            <div class="gallery-wrapper">
+        <div class="photo-gallery">
+            <div class="character-selector">
                 <div class="photo-slider" id="photoSlider">
                     <!-- Photo 1 -->
                     <div class="photo-item">
@@ -392,16 +271,23 @@
                     </div>
                     <!-- Photo 2 -->
                     <div class="photo-item">
-                        <img src="./image.png" alt="Class Photo 2"
+                        <img src="./image2.png" alt="Class Photo 2"
                              onerror="this.onerror=null; this.src='./image.png'; this.alt='Image not found';">
                     </div>
-                    <!-- Add more photos as needed -->
+
+                    <!--
+                    HOW TO ADD MORE PHOTOS:
+                    Copy/paste, then update src and alt text:
+
+                    <div class="photo-item">
+                        <img src="your-image.jpg" alt="Your image description">
+                    </div>
+                    -->
                 </div>
 
-                <!-- Navigation Buttons -->
                 <div class="photo-controls">
-                    <button class="photo-btn" id="prevBtn" aria-label="Previous photo">❮</button>
-                    <button class="photo-btn" id="nextBtn" aria-label="Next photo">❯</button>
+                    <button class="photo-btn" id="prevBtn">❮</button>
+                    <button class="photo-btn" id="nextBtn">❯</button>
                 </div>
 
                 <div class="photo-indicators" id="indicators"></div>
@@ -411,115 +297,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Create dynamic stars
-            function createStars() {
-                const starsContainer = document.querySelector('.stars');
-                const starsCount = 200;
-                
-                // Clear existing stars
-                starsContainer.innerHTML = '';
-                
-                for (let i = 0; i < starsCount; i++) {
-                    const star = document.createElement('div');
-                    star.style.position = 'absolute';
-                    star.style.width = Math.random() * 2 + 'px';
-                    star.style.height = star.style.width;
-                    star.style.background = '#fff';
-                    star.style.borderRadius = '50%';
-                    star.style.boxShadow = '0 0 5px #fff';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.opacity = Math.random() * 0.7 + 0.3;
-                    star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite ${Math.random() * 5}s`;
-                    starsContainer.appendChild(star);
-                }
-            }
-
-            // Initialize slider
             const slider = document.querySelector('.photo-slider');
             const items = document.querySelectorAll('.photo-item');
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
-            const indicatorsContainer = document.getElementById('indicators');
             const indicators = [];
             let currentIndex = 0;
-            let slideInterval;
-            let isDragging = false;
-            let startPos = 0;
-            let currentTranslate = 0;
-            let prevTranslate = 0;
 
             function initSlider() {
-                if (items.length === 0) return;
-                
-                // Initialize first slide
-                items[0].classList.add('active');
-                createIndicators();
-                updateIndicators();
-                
-                // Touch events
-                slider.addEventListener('touchstart', touchStart, { passive: true });
-                slider.addEventListener('touchend', touchEnd, { passive: true });
-                slider.addEventListener('touchmove', touchMove, { passive: true });
-                
-                // Mouse events
-                slider.addEventListener('mousedown', touchStart);
-                window.addEventListener('mouseup', touchEnd);
-                window.addEventListener('mousemove', touchMove);
-                
-                // Keyboard navigation
-                document.addEventListener('keydown', handleKeyDown);
-                
-                // Button events
-                prevBtn.addEventListener('click', () => {
-                    goToSlide(currentIndex - 1);
-                    resetAutoSlide();
-                });
-                
-                nextBtn.addEventListener('click', () => {
-                    goToSlide(currentIndex + 1);
-                    resetAutoSlide();
-                });
-                
-                // Start auto-slide
-                startAutoSlide();
-                
-                // Pause auto-slide on hover
-                slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-                slider.addEventListener('mouseleave', startAutoSlide);
-            }
-
-            function createIndicators() {
-                indicatorsContainer.innerHTML = '';
-                
+                if (items.length > 0) {
+                    items[0].classList.add('active');
+                    updateIndicators();
+                }
+                const indicatorsContainer = document.getElementById('indicators');
                 items.forEach((_, index) => {
                     const indicator = document.createElement('div');
                     indicator.className = 'indicator' + (index === 0 ? ' active' : '');
-                    indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
-                    indicator.addEventListener('click', () => {
-                        goToSlide(index);
-                        resetAutoSlide();
-                    });
+                    indicator.addEventListener('click', () => goToSlide(index));
                     indicatorsContainer.appendChild(indicator);
                     indicators.push(indicator);
                 });
-            }
 
-            function updateIndicators() {
-                indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === currentIndex);
-                });
+                // Touch support
+                let touchStartX = 0;
+                let touchEndX = 0;
+                slider.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, false);
+                slider.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, false);
+
+                function handleSwipe() {
+                    if (touchEndX < touchStartX - 30) nextSlide();
+                    if (touchEndX > touchStartX + 30) prevSlide();
+                }
             }
 
             function goToSlide(index) {
                 if (index < 0) index = items.length - 1;
                 if (index >= items.length) index = 0;
-                if (index === currentIndex) return;
 
-                const direction = index > currentIndex ? 'next' : 'prev';
-                
                 items[currentIndex].classList.remove('active');
-                items[currentIndex].classList.add(direction === 'next' ? 'prev' : 'next');
+                items[currentIndex].classList.add('prev');
 
                 currentIndex = index;
 
@@ -530,114 +351,49 @@
             }
 
             function nextSlide() {
-                goToSlide(currentIndex + 1);
+                items[currentIndex].classList.remove('active');
+                items[currentIndex].classList.add('prev');
+
+                currentIndex = (currentIndex + 1) % items.length;
+
+                items[currentIndex].classList.add('active');
+                items[currentIndex].classList.remove('prev', 'next');
+
+                updateIndicators();
             }
 
             function prevSlide() {
-                goToSlide(currentIndex - 1);
+                items[currentIndex].classList.remove('active');
+                items[currentIndex].classList.add('next');
+
+                currentIndex = (currentIndex - 1 + items.length) % items.length;
+
+                items[currentIndex].classList.add('active');
+                items[currentIndex].classList.remove('prev', 'next');
+
+                updateIndicators();
             }
 
-            function startAutoSlide() {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(nextSlide, 5000);
+            function updateIndicators() {
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentIndex);
+                });
             }
 
-            function resetAutoSlide() {
-                clearInterval(slideInterval);
-                startAutoSlide();
-            }
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
 
-            // Touch and drag handling
-            function touchStart(e) {
-                if (e.type === 'mousedown') {
-                    e.preventDefault();
-                    startPos = e.clientX;
-                } else {
-                    startPos = e.touches[0].clientX;
-                }
-                
-                isDragging = true;
-                slider.style.transition = 'none';
-                clearInterval(slideInterval);
-            }
-
-            function touchMove(e) {
-                if (!isDragging) return;
-                
-                let currentPosition;
-                if (e.type === 'mousemove') {
-                    currentPosition = e.clientX;
-                } else {
-                    currentPosition = e.touches[0].clientX;
-                }
-                
-                const diff = currentPosition - startPos;
-                
-                // Only prevent default if swiping horizontally
-                if (Math.abs(diff) > 5) {
-                    e.preventDefault();
-                }
-            }
-
-            function touchEnd(e) {
-                if (!isDragging) return;
-                
-                isDragging = false;
-                slider.style.transition = '';
-                
-                let endPos;
-                if (e.type === 'mouseup') {
-                    endPos = e.clientX;
-                } else {
-                    endPos = e.changedTouches[0].clientX;
-                }
-                
-                const diff = endPos - startPos;
-                
-                if (Math.abs(diff) > 50) { // Minimum swipe distance
-                    if (diff > 0) {
-                        prevSlide();
-                    } else {
-                        nextSlide();
-                    }
-                }
-                
-                resetAutoSlide();
-            }
-
-            function handleKeyDown(e) {
-                switch(e.key) {
-                    case 'ArrowLeft':
-                        prevSlide();
-                        resetAutoSlide();
-                        break;
-                    case 'ArrowRight':
-                        nextSlide();
-                        resetAutoSlide();
-                        break;
-                }
-            }
-
-            // Handle window resize
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    // Recalculate positions on resize
-                    items.forEach((item, index) => {
-                        if (index === currentIndex) {
-                            item.style.transform = 'translate(-50%, -50%)';
-                        } else if (index < currentIndex) {
-                            item.style.transform = 'translate(-50%, -50%) translateX(-100%)';
-                        } else {
-                            item.style.transform = 'translate(-50%, -50%) translateX(100%)';
-                        }
-                    });
-                }, 250);
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'ArrowRight') nextSlide();
             });
 
-            // Initialize everything
-            createStars();
+            // Auto-advance
+            let slideInterval = setInterval(nextSlide, 5000);
+            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+            slider.addEventListener('mouseleave', () => slideInterval = setInterval(nextSlide, 5000));
+
             initSlider();
         });
     </script>
