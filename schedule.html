@@ -4,151 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule - XI-D</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Critical styles - ensures design works even if CSS file doesn't load */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Courier New', monospace;
-            background: #000 !important;
-            color: #ffd700 !important;
-            overflow-x: hidden;
-            min-height: 100vh;
-            position: relative;
-        }
-        .schedule-page {
-            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%) !important;
-        }
-        #starsCanvas, #cometsCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-        #cometsCanvas {
-            z-index: 2;
-        }
-        .schedule-container {
-            position: relative;
-            z-index: 10;
-            min-height: 100vh;
-            padding: clamp(1rem, 3vw, 2rem);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .page-header {
-            text-align: center;
-            margin-bottom: clamp(1.5rem, 4vw, 3rem);
-            padding: clamp(1.2rem, 3vw, 2rem);
-            border: 3px solid #ffd700 !important;
-            border-radius: 25px;
-            background: rgba(0, 0, 0, 0.05) !important;
-            backdrop-filter: blur(3px);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(255, 215, 0, 0.03);
-        }
-        .page-title {
-            font-size: clamp(1.3rem, 5vw, 3rem);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: #ffd700 !important;
-            text-shadow: 
-                0 0 10px #ffd700,
-                0 0 20px rgba(255, 215, 0, 0.5);
-            margin-bottom: 1rem;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.8rem 2rem;
-            color: #ffd700 !important;
-            text-decoration: none;
-            border: 2px solid #ffd700 !important;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.1) !important;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        .back-link:hover {
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), inset 0 0 15px rgba(255, 215, 0, 0.05);
-            transform: translateY(-3px);
-            border-color: #ffed4e !important;
-            background: rgba(0, 0, 0, 0.15) !important;
-        }
-        .schedule-grid {
-            display: grid;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        .day-schedule {
-            border: 2px solid #ffd700 !important;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.05) !important;
-            backdrop-filter: blur(3px);
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), inset 0 0 20px rgba(255, 215, 0, 0.02);
-        }
-        .day-schedule:hover {
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 25px rgba(255, 215, 0, 0.05);
-            transform: translateY(-5px);
-            border-color: #ffed4e !important;
-            background: rgba(0, 0, 0, 0.1) !important;
-        }
-        .day-title {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-            color: #ffd700 !important;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            border-bottom: 2px solid #ffd700 !important;
-            padding-bottom: 0.5rem;
-        }
-        .schedule-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-        }
-        .schedule-item:last-child {
-            border-bottom: none;
-        }
-        .schedule-time {
-            font-weight: bold;
-            min-width: 120px;
-            color: #ffd700 !important;
-        }
-        .schedule-subject {
-            flex: 1;
-            text-align: right;
-            color: #ffd700 !important;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="schedule-page">
-    <canvas id="starsCanvas"></canvas>
-    <canvas id="cometsCanvas"></canvas>
-    
-    <div class="schedule-container">
-        <div class="page-header">
+<body>
+    <div class="container">
+        <header class="page-header">
             <h1 class="page-title">Class Schedule</h1>
             <a href="index.html" class="back-link">← Back to Home</a>
-        </div>
+        </header>
         
         <div class="schedule-grid" id="scheduleGrid"></div>
     </div>
     
-    <script src="birthday-stars.js"></script>
     <script src="schedule.js"></script>
 </body>
 </html>
