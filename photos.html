@@ -15,7 +15,11 @@
         html, body {
             height: 100%;
             width: 100%;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         body {
@@ -26,6 +30,9 @@
             flex-direction: column;
             min-height: 100vh;
             position: relative;
+            z-index: 1;
+            padding-bottom: 2rem;
+            overflow-y: auto;
         }
         
         /* Starry Background Animation */
@@ -79,10 +86,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 100%;
+            min-height: 100vh;
             position: relative;
             z-index: 1;
             padding-bottom: 2rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .photos-container {
@@ -302,8 +311,14 @@
         }
 
         @media (max-width: 768px) {
+            html, body {
+                height: auto;
+                min-height: 100vh;
+            }
+            
             .photos-container {
                 padding: 1rem 0.5rem;
+                min-height: 100vh;
             }
             
             .page-header {
@@ -312,26 +327,8 @@
                 width: 95%;
             }
             
-            .page-title {
-                font-size: 1.5rem;
-                letter-spacing: 0.2em;
-                margin-bottom: 0.8rem;
-            }
-            
-            .gallery-wrapper {
-                padding: 0 15px;
-                width: 100%;
-            }
-            
             .photo-slider {
-                height: 50vh;
-                min-height: 300px;
-            }
-            
-            .photo-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
+                touch-action: pan-y;
             }
             
             .back-link {
