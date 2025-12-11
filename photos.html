@@ -152,18 +152,20 @@
 
         .photo-item {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: all 0.8s ease-in-out;
-            transform: translate(-50%, -50%) translateX(100%);
             top: 50%;
             left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform, opacity;
         }
 
         .photo-item.active {
@@ -519,14 +521,26 @@
 
                 const direction = index > currentIndex ? 'next' : 'prev';
                 
-                items[currentIndex].classList.remove('active');
-                items[currentIndex].classList.add(direction === 'next' ? 'prev' : 'next');
+                // Reset all items first
+                items.forEach((item, i) => {
+                    item.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                    item.style.zIndex = '';
+                    
+                    if (i === currentIndex) {
+                        item.classList.remove('active');
+                        item.classList.add(direction === 'next' ? 'prev' : 'next');
+                    } else if (i === index) {
+                        item.classList.add('active');
+                        item.classList.remove('prev', 'next');
+                        item.style.zIndex = '2';
+                    } else {
+                        item.classList.remove('active', 'prev', 'next');
+                    }
+                });
 
                 currentIndex = index;
-
-                items[currentIndex].classList.add('active');
-                items[currentIndex].classList.remove('prev', 'next');
-
                 updateIndicators();
             }
 
@@ -553,13 +567,31 @@
                 if (e.type === 'mousedown') {
                     e.preventDefault();
                     startPos = e.clientX;
-                } else {
+                } else if (e.touches && e.touches.length === 1) {
                     startPos = e.touches[0].clientX;
+                    e.preventDefault(); // Prevent scrolling while swiping
+                } else {
+                    return;
                 }
                 
                 isDragging = true;
                 slider.style.transition = 'none';
                 clearInterval(slideInterval);
+                
+                // Prepare adjacent slides
+                const prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
+                const nextIndex = currentIndex === items.length - 1 ? 0 : currentIndex + 1;
+                
+                items.forEach((item, index) => {
+                    item.style.transition = 'none';
+                    if (index === currentIndex) {
+                        item.style.zIndex = 2;
+                    } else if (index === prevIndex || index === nextIndex) {
+                        item.style.zIndex = 1;
+                    } else {
+                        item.style.zIndex = 0;
+                    }
+                });
             }
 
             function touchMove(e) {
@@ -568,15 +600,42 @@
                 let currentPosition;
                 if (e.type === 'mousemove') {
                     currentPosition = e.clientX;
-                } else {
+                } else if (e.touches && e.touches.length === 1) {
                     currentPosition = e.touches[0].clientX;
+                    e.preventDefault(); // Prevent scrolling while swiping
+                } else {
+                    return;
                 }
                 
                 const diff = currentPosition - startPos;
+                const activeItem = items[currentIndex];
                 
-                // Only prevent default if swiping horizontally
-                if (Math.abs(diff) > 5) {
-                    e.preventDefault();
+                if (!activeItem) return;
+                
+                // Calculate the next and previous indices with wrapping
+                const nextIndex = (currentIndex + 1) % items.length;
+                const prevIndex = (currentIndex - 1 + items.length) % items.length;
+                
+                // Update the transform of the active slide
+                activeItem.style.transform = `translate(calc(-50% + ${diff}px), -50%)`;
+                
+                // Update adjacent slides
+                if (diff > 0) {
+                    // Swiping right, show previous slide
+                    const prevItem = items[prevIndex];
+                    if (prevItem) {
+                        const offset = -window.innerWidth + diff;
+                        prevItem.style.transform = `translate(calc(-50% + ${offset}px), -50%)`;
+                        prevItem.style.opacity = '1';
+                    }
+                } else {
+                    // Swiping left, show next slide
+                    const nextItem = items[nextIndex];
+                    if (nextItem) {
+                        const offset = window.innerWidth + diff;
+                        nextItem.style.transform = `translate(calc(-50% + ${offset}px), -50%)`;
+                        nextItem.style.opacity = '1';
+                    }
                 }
             }
 
@@ -584,23 +643,35 @@
                 if (!isDragging) return;
                 
                 isDragging = false;
-                slider.style.transition = '';
                 
                 let endPos;
                 if (e.type === 'mouseup') {
                     endPos = e.clientX;
-                } else {
+                } else if (e.changedTouches && e.changedTouches.length > 0) {
                     endPos = e.changedTouches[0].clientX;
+                } else {
+                    return;
                 }
                 
                 const diff = endPos - startPos;
                 
+                // Reset transitions
+                items.forEach(item => {
+                    item.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                });
+                
+                // Determine if we should change slides
                 if (Math.abs(diff) > 50) { // Minimum swipe distance
                     if (diff > 0) {
                         prevSlide();
                     } else {
                         nextSlide();
                     }
+                } else {
+                    // If not enough distance, return to current slide
+                    goToSlide(currentIndex);
                 }
                 
                 resetAutoSlide();
