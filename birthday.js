@@ -66,6 +66,7 @@ function getDaysUntilBirthday(birthdayDate) {
     return daysDiff;
 }
 
+
 // Display birthdays
 function displayBirthdays() {
     const container = document.getElementById('birthdayList');
@@ -84,8 +85,8 @@ function displayBirthdays() {
         container.innerHTML = '<div class="birthday-card" style="text-align: center; padding: 2rem;"><div class="birthday-name">No upcoming birthdays in the next 7 days</div></div>';
         return;
     }
-    
-    upcomingBirthdays.forEach(birthday => {
+
+upcomingBirthdays.forEach(birthday => {
         const card = document.createElement('div');
         card.className = 'birthday-card';
         card.classList.add('upcoming');
@@ -104,8 +105,8 @@ function displayBirthdays() {
         } else if (birthday.daysUntil > 0 && birthday.daysUntil <= 7) {
             daysText = `<div class="days-until">${birthday.daysUntil} day${birthday.daysUntil > 1 ? 's' : ''} until birthday!</div>`;
         }
-        
-        card.innerHTML = `
+
+card.innerHTML = `
             <div class="birthday-name">${birthday.name}</div>
             <div class="birthday-date">${formattedDate}</div>
             ${daysText}
@@ -114,6 +115,5 @@ function displayBirthdays() {
         container.appendChild(card);
     });
 }
-
 // Initialize
 document.addEventListener('DOMContentLoaded', displayBirthdays);
