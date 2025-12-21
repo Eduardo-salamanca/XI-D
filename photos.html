@@ -4,32 +4,714 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Memory - XI-D</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset and Base Styles */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #ffd700;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 2rem;
+            overflow-y: auto;
+        }
+        
+        /* Starry Background Animation */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .starry-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background: #000;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at center, 
+                    rgba(255, 255, 255, 0.5) 0%,
+                    rgba(255, 255, 255, 0.1) 40%,
+                    rgba(0, 0, 0, 0) 70%
+                );
+            animation: twinkle 8s infinite;
+        }
+
+        .stars::after {
+            animation-delay: 4s;
+            opacity: 0.5;
+        }
+
+        /* Main Content Container */
+        .photos-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 2rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .photos-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            flex: 1;
+        }
+
+        /* Header Styles */
+        .page-header {
+            text-align: center;
+            margin: 0 auto 2rem;
+            padding: 1.5rem;
+            border: 3px solid #ffd700;
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(3px);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), 
+                       inset 0 0 40px rgba(255, 215, 0, 0.03);
+            max-width: 800px;
+            width: 95%;
+        }
+
+        .page-title {
+            font-size: clamp(1.3rem, 5vw, 2.5rem);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700,
+                        0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        /* Gallery Wrapper */
+        .gallery-wrapper {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 60px;
+            width: 100%;
+        }
+
+        /* Photo Slider */
+        .photo-slider {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 400px;
+            max-height: 70vh;
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+            margin: 0 auto;
+        }
+
+        .photo-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform, opacity;
+        }
+
+        .photo-item.active {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .photo-item.prev {
+            transform: translate(-50%, -50%) translateX(-100%);
+            z-index: 5;
+        }
+
+        .photo-item.next {
+            transform: translate(-50%, -50%) translateX(100%);
+            z-index: 5;
+        }
+
+        .photo-item img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .photo-item.active img {
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .photo-item img:hover { 
+            transform: scale(1.02); 
+        }
+
+        /* Navigation Controls */
+        .photo-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 20;
+            padding: 0 10px;
+        }
+
+        .photo-btn {
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 30;
+            padding: 0;
+            margin: 0;
+        }
+
+        .photo-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .photo-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 20;
+            padding: 10px;
+            pointer-events: none;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            pointer-events: auto;
+        }
+
+        .indicator.active {
+            background: #ffd700;
+            transform: scale(1.2);
+            border-color: #fff;
+            box-shadow: 0 0 10px #ffd700;
+        }
+
+        /* Back Link Styles */
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
+            color: #ffd700;
+            text-decoration: none;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4), 
+                       inset 0 0 15px rgba(255, 215, 0, 0.1);
+            transform: translateY(-3px);
+            border-color: #ffed4e;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .gallery-wrapper {
+                padding: 0 50px;
+            }
+            
+            .photo-slider {
+                height: 60vh;
+                min-height: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html, body {
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .photos-container {
+                padding: 1rem 0.5rem;
+                min-height: 100vh;
+            }
+            
+            .page-header {
+                padding: 1rem;
+                margin: 0 auto 1.5rem;
+                width: 95%;
+            }
+            
+            .photo-slider {
+                touch-action: pan-y;
+            }
+            
+            .back-link {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-wrapper {
+                padding: 0 10px;
+            }
+            
+            .photo-slider {
+                height: 45vh;
+                min-height: 250px;
+            }
+            
+            .photo-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            .indicator {
+                width: 10px;
+                height: 10px;
+            }
+            
+            .page-header {
+                padding: 0.8rem;
+            }
+            
+            .page-title {
+                font-size: 1.2rem;
+                letter-spacing: 0.1em;
+            }
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <header class="page-header">
-            <h1 class="page-title">Photo Memory</h1>
-            <a href="index.html" class="back-link">← Back to Home</a>
-        </header>
+<body class="photos-page">
+    <!-- Starry Background -->
+    <div class="starry-bg">
+        <div class="stars"></div>
+    </div>
 
-        <div class="photo-gallery">
-            <div class="photo-slider" id="photoSlider">
-                <div class="photo-item active">
-                    <img src="./image1.png" alt="Class Photo 1">
-                </div>
-                <div class="photo-item">
-                    <img src="./image.png" alt="Class Photo 2">
-                </div>
-            </div>
+    <div class="photos-page">
+        <div class="photos-container">
+            <header class="page-header">
+                <h1 class="page-title">Photo Memory</h1>
+                <a href="index.html" class="back-link">← Back to Home</a>
+            </header>
 
-            <div class="photo-controls">
-                <button class="photo-btn" id="prevBtn">❮</button>
-                <button class="photo-btn" id="nextBtn">❯</button>
+            <div class="gallery-wrapper">
+                <div class="photo-slider" id="photoSlider">
+                    <!-- Photo 1 -->
+                    <div class="photo-item">
+                        <img src="./image1.png" alt="Class Photo 1"
+                             onerror="this.onerror=null; this.src='./image1.png'; this.alt='Image not found';">
+                    </div>
+                    <!-- Photo 2 -->
+                    <div class="photo-item">
+                        <img src="./image.png" alt="Class Photo 2"
+                             onerror="this.onerror=null; this.src='./image.png'; this.alt='Image not found';">
+                    </div>
+                    <!-- Add more photos as needed -->
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="photo-controls">
+                    <button class="photo-btn" id="prevBtn" aria-label="Previous photo">❮</button>
+                    <button class="photo-btn" id="nextBtn" aria-label="Next photo">❯</button>
+                </div>
+
+                <div class="photo-indicators" id="indicators"></div>
             </div>
         </div>
     </div>
 
-    <script src="photos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create stars immediately
+            createStars();
+            // Create dynamic stars
+            function createStars() {
+                const starsContainer = document.querySelector('.stars');
+                const starsCount = 200;
+                
+                // Clear existing stars
+                starsContainer.innerHTML = '';
+                
+                for (let i = 0; i < starsCount; i++) {
+                    const star = document.createElement('div');
+                    star.style.position = 'absolute';
+                    star.style.width = Math.random() * 2 + 'px';
+                    star.style.height = star.style.width;
+                    star.style.background = '#fff';
+                    star.style.borderRadius = '50%';
+                    star.style.boxShadow = '0 0 5px #fff';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.opacity = Math.random() * 0.7 + 0.3;
+                    star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite ${Math.random() * 5}s`;
+                    starsContainer.appendChild(star);
+                }
+            }
+
+            // Initialize slider
+            const slider = document.querySelector('.photo-slider');
+            const items = document.querySelectorAll('.photo-item');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicatorsContainer = document.getElementById('indicators');
+            const indicators = [];
+            let currentIndex = 0;
+            let slideInterval;
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+
+            function initSlider() {
+                if (items.length === 0) return;
+                
+                // Initialize first slide
+                items[0].classList.add('active');
+                createIndicators();
+                updateIndicators();
+                
+                // Touch events
+                slider.addEventListener('touchstart', touchStart, { passive: true });
+                slider.addEventListener('touchend', touchEnd, { passive: true });
+                slider.addEventListener('touchmove', touchMove, { passive: true });
+                
+                // Mouse events
+                slider.addEventListener('mousedown', touchStart);
+                window.addEventListener('mouseup', touchEnd);
+                window.addEventListener('mousemove', touchMove);
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', handleKeyDown);
+                
+                // Button events
+                prevBtn.addEventListener('click', () => {
+                    goToSlide(currentIndex - 1);
+                    resetAutoSlide();
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    goToSlide(currentIndex + 1);
+                    resetAutoSlide();
+                });
+                
+                // Start auto-slide
+                startAutoSlide();
+                
+                // Pause auto-slide on hover
+                slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+                slider.addEventListener('mouseleave', startAutoSlide);
+            }
+
+            function createIndicators() {
+                indicatorsContainer.innerHTML = '';
+                
+                items.forEach((_, index) => {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'indicator' + (index === 0 ? ' active' : '');
+                    indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                    indicator.addEventListener('click', () => {
+                        goToSlide(index);
+                        resetAutoSlide();
+                    });
+                    indicatorsContainer.appendChild(indicator);
+                    indicators.push(indicator);
+                });
+            }
+
+            function updateIndicators() {
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            function goToSlide(index) {
+                if (index < 0) index = items.length - 1;
+                if (index >= items.length) index = 0;
+                if (index === currentIndex) return;
+
+                const direction = index > currentIndex ? 'next' : 'prev';
+                
+                // Reset all items first
+                items.forEach((item, i) => {
+                    item.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                    item.style.zIndex = '';
+                    
+                    if (i === currentIndex) {
+                        item.classList.remove('active');
+                        item.classList.add(direction === 'next' ? 'prev' : 'next');
+                    } else if (i === index) {
+                        item.classList.add('active');
+                        item.classList.remove('prev', 'next');
+                        item.style.zIndex = '2';
+                    } else {
+                        item.classList.remove('active', 'prev', 'next');
+                    }
+                });
+
+                currentIndex = index;
+                updateIndicators();
+            }
+
+            function nextSlide() {
+                goToSlide(currentIndex + 1);
+            }
+
+            function prevSlide() {
+                goToSlide(currentIndex - 1);
+            }
+
+            function startAutoSlide() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function resetAutoSlide() {
+                clearInterval(slideInterval);
+                startAutoSlide();
+            }
+
+            // Touch and drag handling
+            function touchStart(e) {
+                if (e.type === 'mousedown') {
+                    e.preventDefault();
+                    startPos = e.clientX;
+                } else if (e.touches && e.touches.length === 1) {
+                    startPos = e.touches[0].clientX;
+                    e.preventDefault(); // Prevent scrolling while swiping
+                } else {
+                    return;
+                }
+                
+                isDragging = true;
+                slider.style.transition = 'none';
+                clearInterval(slideInterval);
+                
+                // Prepare adjacent slides
+                const prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
+                const nextIndex = currentIndex === items.length - 1 ? 0 : currentIndex + 1;
+                
+                items.forEach((item, index) => {
+                    item.style.transition = 'none';
+                    if (index === currentIndex) {
+                        item.style.zIndex = 2;
+                    } else if (index === prevIndex || index === nextIndex) {
+                        item.style.zIndex = 1;
+                    } else {
+                        item.style.zIndex = 0;
+                    }
+                });
+            }
+
+            function touchMove(e) {
+                if (!isDragging) return;
+                
+                let currentPosition;
+                if (e.type === 'mousemove') {
+                    currentPosition = e.clientX;
+                } else if (e.touches && e.touches.length === 1) {
+                    currentPosition = e.touches[0].clientX;
+                    e.preventDefault(); // Prevent scrolling while swiping
+                } else {
+                    return;
+                }
+                
+                const diff = currentPosition - startPos;
+                const activeItem = items[currentIndex];
+                
+                if (!activeItem) return;
+                
+                // Calculate the next and previous indices with wrapping
+                const nextIndex = (currentIndex + 1) % items.length;
+                const prevIndex = (currentIndex - 1 + items.length) % items.length;
+                
+                // Update the transform of the active slide
+                activeItem.style.transform = `translate(calc(-50% + ${diff}px), -50%)`;
+                
+                // Update adjacent slides
+                if (diff > 0) {
+                    // Swiping right, show previous slide
+                    const prevItem = items[prevIndex];
+                    if (prevItem) {
+                        const offset = -window.innerWidth + diff;
+                        prevItem.style.transform = `translate(calc(-50% + ${offset}px), -50%)`;
+                        prevItem.style.opacity = '1';
+                    }
+                } else {
+                    // Swiping left, show next slide
+                    const nextItem = items[nextIndex];
+                    if (nextItem) {
+                        const offset = window.innerWidth + diff;
+                        nextItem.style.transform = `translate(calc(-50% + ${offset}px), -50%)`;
+                        nextItem.style.opacity = '1';
+                    }
+                }
+            }
+
+            function touchEnd(e) {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                
+                let endPos;
+                if (e.type === 'mouseup') {
+                    endPos = e.clientX;
+                } else if (e.changedTouches && e.changedTouches.length > 0) {
+                    endPos = e.changedTouches[0].clientX;
+                } else {
+                    return;
+                }
+                
+                const diff = endPos - startPos;
+                
+                // Reset transitions
+                items.forEach(item => {
+                    item.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                });
+                
+                // Determine if we should change slides
+                if (Math.abs(diff) > 50) { // Minimum swipe distance
+                    if (diff > 0) {
+                        prevSlide();
+                    } else {
+                        nextSlide();
+                    }
+                } else {
+                    // If not enough distance, return to current slide
+                    goToSlide(currentIndex);
+                }
+                
+                resetAutoSlide();
+            }
+
+            function handleKeyDown(e) {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        prevSlide();
+                        resetAutoSlide();
+                        break;
+                    case 'ArrowRight':
+                        nextSlide();
+                        resetAutoSlide();
+                        break;
+                }
+            }
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    // Recalculate positions on resize
+                    items.forEach((item, index) => {
+                        if (index === currentIndex) {
+                            item.style.transform = 'translate(-50%, -50%)';
+                        } else if (index < currentIndex) {
+                            item.style.transform = 'translate(-50%, -50%) translateX(-100%)';
+                        } else {
+                            item.style.transform = 'translate(-50%, -50%) translateX(100%)';
+                        }
+                    });
+                }, 250);
+            });
+
+            // Initialize everything
+            createStars();
+            initSlider();
+        });
+    </script>
 </body>
 </html>

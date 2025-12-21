@@ -1,206 +1,149 @@
+// Photo memory slider with game character selection effect
+const photoSlider = document.getElementById('photoSlider');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const indicators = document.getElementById('indicators');
+const photoCounter = document.getElementById('photoCounter');
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize slider
-    const slider = document.querySelector('.photo-slider');
-    const items = document.querySelectorAll('.photo-item');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const indicatorsContainer = document.getElementById('indicators');
-    const indicators = [];
-    let currentIndex = 0;
-    let slideInterval;
-    let isDragging = false;
-    let startPos = 0;
-    let currentTranslate = 0;
-    let prevTranslate = 0;
+let currentIndex = 0;
+let photos = [];
 
-    function initSlider() {
-        if (items.length === 0) return;
-
-        // Initialize first slide
-        items[0].classList.add('active');
+// Initialize photos array
+function refreshPhotos() {
+    photos = Array.from(photoSlider.querySelectorAll('.photo-item'));
+    if (photos.length > 0) {
+        goToPhoto(Math.min(currentIndex, photos.length - 1));
+    } else {
         updateIndicators();
-
-        // Touch events
-        if (slider) {
-            slider.addEventListener('touchstart', touchStart, { passive: true });
-            slider.addEventListener('touchend', touchEnd, { passive: true });
-            slider.addEventListener('touchmove', touchMove, { passive: true });
-
-            // Mouse events
-            slider.addEventListener('mousedown', touchStart);
-            window.addEventListener('mouseup', touchEnd);
-            window.addEventListener('mousemove', touchMove);
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', handleKeyDown);
-
-        // Button events
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                goToSlide(currentIndex - 1);
-                resetAutoSlide();
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                goToSlide(currentIndex + 1);
-                resetAutoSlide();
-            });
-        }
-
-        // Start auto-slide
-        startAutoSlide();
-
-        // Pause auto-slide on hover
-        if (slider) {
-            slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            slider.addEventListener('mouseleave', startAutoSlide);
-        }
+        updateButtons();
+        updateCounter();
     }
+}
 
-    function createIndicators() {
-        if (!indicatorsContainer) return;
-        indicatorsContainer.innerHTML = '';
+// Update indicators
+function updateIndicators() {
+    indicators.innerHTML = '';
+    photos.forEach((_, index) => {
+        const indicator = document.createElement('div');
+        indicator.className = `indicator ${index === currentIndex ? 'active' : ''}`;
+        indicator.addEventListener('click', () => goToPhoto(index));
+        indicators.appendChild(indicator);
+    });
+}
 
-        items.forEach((_, index) => {
-            const indicator = document.createElement('div');
-            indicator.className = 'indicator' + (index === 0 ? ' active' : '');
-            indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
-            indicator.addEventListener('click', () => {
-                goToSlide(index);
-                resetAutoSlide();
-            });
-            indicatorsContainer.appendChild(indicator);
-            indicators.push(indicator);
-        });
+// Update counter
+function updateCounter() {
+    if (photoCounter) {
+        photoCounter.textContent = `${currentIndex + 1} / ${photos.length || 1}`;
     }
+}
 
-    function updateIndicators() {
-        if (indicators.length === 0) createIndicators();
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentIndex);
-        });
+// Go to specific photo
+function goToPhoto(index) {
+    if (photos.length === 0) return;
+    if (index < 0 || index >= photos.length) return;
+    
+    // Remove all classes
+    photos.forEach(photo => {
+        photo.classList.remove('active', 'prev', 'next');
+    });
+    
+    // Update current index
+    currentIndex = index;
+    
+    // Set active photo (center)
+    photos[currentIndex].classList.add('active');
+    
+    // Set previous photo (left)
+    if (currentIndex > 0) {
+        photos[currentIndex - 1].classList.add('prev');
     }
-
-    function goToSlide(index) {
-        if (items.length === 0) return;
-        if (index < 0) index = items.length - 1;
-        if (index >= items.length) index = 0;
-        if (index === currentIndex) return;
-
-        const direction = index > currentIndex ? 'next' : 'prev';
-
-        // Reset all items first
-        items.forEach((item, i) => {
-            item.classList.remove('active', 'prev', 'next');
-        });
-
-        items[currentIndex].classList.add(direction === 'next' ? 'prev' : 'next');
-        items[index].classList.add('active');
-
-        currentIndex = index;
-        updateIndicators();
+    
+    // Set next photo (right)
+    if (currentIndex < photos.length - 1) {
+        photos[currentIndex + 1].classList.add('next');
     }
+    
+    updateIndicators();
+    updateButtons();
+    updateCounter();
+}
 
-    function nextSlide() {
-        goToSlide(currentIndex + 1);
+// Update button states
+function updateButtons() {
+    if (prevBtn) prevBtn.disabled = currentIndex === 0 || photos.length <= 1;
+    if (nextBtn) nextBtn.disabled = currentIndex === photos.length - 1 || photos.length <= 1;
+}
+
+// Next photo
+function nextPhoto() {
+    if (currentIndex < photos.length - 1) {
+        goToPhoto(currentIndex + 1);
     }
+}
 
-    function prevSlide() {
-        goToSlide(currentIndex - 1);
+// Previous photo
+function prevPhoto() {
+    if (currentIndex > 0) {
+        goToPhoto(currentIndex - 1);
     }
+}
 
-    function startAutoSlide() {
-        clearInterval(slideInterval);
-        slideInterval = setInterval(nextSlide, 5000);
-    }
+// Event listeners
+if (prevBtn) prevBtn.addEventListener('click', prevPhoto);
+if (nextBtn) nextBtn.addEventListener('click', nextPhoto);
 
-    function resetAutoSlide() {
-        clearInterval(slideInterval);
-        startAutoSlide();
-    }
-
-    // Touch and drag handling
-    function touchStart(e) {
-        if (e.type === 'mousedown') {
-            e.preventDefault();
-            startPos = e.clientX;
-        } else if (e.touches && e.touches.length === 1) {
-            startPos = e.touches[0].clientX;
-        } else {
-            return;
-        }
-
-        isDragging = true;
-        clearInterval(slideInterval);
-    }
-
-    function touchMove(e) {
-        if (!isDragging) return;
-
-        let currentPosition;
-        if (e.type === 'mousemove') {
-            currentPosition = e.clientX;
-        } else if (e.touches && e.touches.length === 1) {
-            currentPosition = e.touches[0].clientX;
-        } else {
-            return;
-        }
-
-        const diff = currentPosition - startPos;
-        const activeItem = items[currentIndex];
-
-        if (!activeItem) return;
-
-        activeItem.style.transform = `translateX(${diff}px)`;
-    }
-
-    function touchEnd(e) {
-        if (!isDragging) return;
-
-        isDragging = false;
-
-        let endPos;
-        if (e.type === 'mouseup') {
-            endPos = e.clientX;
-        } else if (e.changedTouches && e.changedTouches.length > 0) {
-            endPos = e.changedTouches[0].clientX;
-        } else {
-            return;
-        }
-
-        const diff = endPos - startPos;
-
-        items[currentIndex].style.transform = '';
-
-        // Determine if we should change slides
-        if (Math.abs(diff) > 50) { // Minimum swipe distance
-            if (diff > 0) {
-                prevSlide();
-            } else {
-                nextSlide();
-            }
-        }
-
-        resetAutoSlide();
-    }
-
-    function handleKeyDown(e) {
-        switch(e.key) {
-            case 'ArrowLeft':
-                prevSlide();
-                resetAutoSlide();
-                break;
-            case 'ArrowRight':
-                nextSlide();
-                resetAutoSlide();
-                break;
-        }
-    }
-
-    // Initialize everything
-    initSlider();
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevPhoto();
+    if (e.key === 'ArrowRight') nextPhoto();
 });
+
+// Click on side photos to navigate
+document.addEventListener('click', (e) => {
+    const clickedPhoto = e.target.closest('.photo-item');
+    if (clickedPhoto && clickedPhoto.classList.contains('prev')) {
+        prevPhoto();
+    } else if (clickedPhoto && clickedPhoto.classList.contains('next')) {
+        nextPhoto();
+    }
+});
+
+// Touch swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+if (photoSlider) {
+    photoSlider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    photoSlider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - next photo
+            nextPhoto();
+        } else {
+            // Swipe right - previous photo
+            prevPhoto();
+        }
+    }
+}
+
+// Initialize
+refreshPhotos();
+
+// Watch for new photos added dynamically
+const observer = new MutationObserver(() => {
+    refreshPhotos();
+});
+observer.observe(photoSlider, { childList: true, subtree: true });
